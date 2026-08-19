@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kinetic Dex - Pokedex Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Sora:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-container": "#5c0002",
+                    "surface-container-highest": "#353535",
+                    "surface-container-high": "#2a2a2a",
+                    "on-background": "#e5e2e1",
+                    "on-tertiary-container": "#4c3f00",
+                    "tertiary-fixed": "#ffe16d",
+                    "on-surface": "#e5e2e1",
+                    "inverse-on-surface": "#313030",
+                    "background": "#131313",
+                    "surface-container-low": "#1c1b1b",
+                    "inverse-primary": "#c0000a",
+                    "outline-variant": "#5f3f3a",
+                    "on-primary-fixed-variant": "#930005",
+                    "on-surface-variant": "#eabcb6",
+                    "on-primary": "#690003",
+                    "on-tertiary": "#3a3000",
+                    "secondary-container": "#14d1ff",
+                    "tertiary": "#e9c400",
+                    "on-tertiary-fixed": "#221b00",
+                    "on-secondary-fixed": "#001f28",
+                    "primary": "#ffb4aa",
+                    "outline": "#b08781",
+                    "on-tertiary-fixed-variant": "#544600",
+                    "surface-dim": "#131313",
+                    "surface-variant": "#353535",
+                    "primary-fixed-dim": "#ffb4aa",
+                    "primary-fixed": "#ffdad5",
+                    "on-secondary-fixed-variant": "#004e60",
+                    "error": "#ffb4ab",
+                    "secondary-fixed-dim": "#4cd6ff",
+                    "primary-container": "#ff5545",
+                    "on-error-container": "#ffdad6",
+                    "inverse-surface": "#e5e2e1",
+                    "secondary": "#a6e6ff",
+                    "tertiary-container": "#c9a900",
+                    "surface": "#131313",
+                    "on-secondary-container": "#00566b",
+                    "secondary-fixed": "#b7eaff",
+                    "surface-bright": "#393939",
+                    "error-container": "#93000a",
+                    "surface-container": "#20201f",
+                    "on-error": "#690005",
+                    "on-primary-fixed": "#410001",
+                    "surface-tint": "#ffb4aa",
+                    "on-secondary": "#003543",
+                    "tertiary-fixed-dim": "#e9c400",
+                    "surface-container-lowest": "#0e0e0e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "40px",
+                    "unit": "4px",
+                    "block-gap": "32px",
+                    "margin-mobile": "16px",
+                    "gutter": "20px"
+            },
+            "fontFamily": {
+                    "label-mono": [
+                            "JetBrains Mono"
+                    ],
+                    "body-md": [
+                            "Hanken Grotesk"
+                    ],
+                    "headline-lg": [
+                            "Sora"
+                    ],
+                    "headline-lg-mobile": [
+                            "Sora"
+                    ],
+                    "display-xl": [
+                            "Sora"
+                    ]
+            },
+            "fontSize": {
+                    "label-mono": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "display-xl": [
+                            "64px",
+                            {
+                                    "lineHeight": "72px",
+                                    "letterSpacing": "-0.04em",
+                                    "fontWeight": "800"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #0D0D0D; color: #e5e2e1; }
+        .glass-panel {
+            background-color: rgba(26, 26, 26, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .structural-border {
+            border: 2px solid #1A1A1A;
+        }
+        .glow-active {
+            box-shadow: 0 0 15px rgba(255, 28, 28, 0.2);
+        }
+        .glow-secondary {
+            box-shadow: 0 0 15px rgba(0, 209, 255, 0.2);
+        }
+        
+        .btn-primary {
+            background-color: #FF1C1C;
+            color: black;
+            border-radius: 0;
+            transition: all 0.2s;
+        }
+        .btn-primary:hover {
+            box-shadow: 4px 4px 0px 0px #00D1FF;
+            transform: translate(-2px, -2px);
+        }
+        
+        .dex-input {
+            background-color: black;
+            border: none;
+            border-bottom: 2px solid #B0B0B0;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .dex-input:focus {
+            outline: none;
+            border-bottom-color: #00D1FF;
+            box-shadow: 0 10px 15px -3px rgba(0, 209, 255, 0.1);
+        }
+        
+        .type-badge-electric { border-left: 4px solid #F8D030; }
+        .type-badge-fire { border-left: 4px solid #EE8130; }
+        .type-badge-water { border-left: 4px solid #6390F0; }
+        .type-badge-grass { border-left: 4px solid #7AC74C; }
+        .type-badge-poison { border-left: 4px solid #A33EA1; }
+        .type-badge-flying { border-left: 4px solid #A98FF3; }
+        .type-badge-bug { border-left: 4px solid #A6B91A; }
+    </style>
+</head>
+<body class="font-body-md text-body-md min-h-screen flex flex-col md:flex-row overflow-x-hidden">
+<!-- Mobile Top Navigation (Visible only on mobile) -->
+<nav class="md:hidden w-full sticky top-0 z-50 bg-background/70 backdrop-blur-xl border-b-2 border-outline-variant flex justify-between items-center h-16 px-margin-mobile">
+<div class="flex items-center gap-4">
+<span class="font-display-xl text-headline-lg-mobile uppercase tracking-tighter text-primary-container">Kinetic Dex</span>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</div>
+</nav>
+<!-- Side Navigation (Visible only on desktop) -->
+<nav class="hidden md:flex flex-col py-margin-desktop h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest border-r-2 border-outline-variant z-40">
+<div class="px-gutter mb-block-gap">
+<h1 class="font-display-xl text-headline-lg text-primary-container uppercase tracking-tighter">KINETIC DEX</h1>
+<p class="font-label-mono text-label-mono text-secondary-container mt-2">Elite Runner v4.0</p>
+</div>
+<div class="flex-1 flex flex-col gap-2 px-4">
+<a class="flex items-center gap-3 px-4 py-3 rounded-none text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-label-mono text-label-mono uppercase tracking-wider">Marathon Map</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-none text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-label-mono text-label-mono uppercase tracking-wider">Game Guides</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-none bg-secondary-container text-on-secondary-fixed font-bold border-l-4 border-tertiary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="Analytics">find_replace</span>
+<span class="font-label-mono text-label-mono uppercase tracking-wider">Pokedex Tracker</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-none text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-label-mono text-label-mono uppercase tracking-wider">Profile</span>
+</a>
+</div>
+<div class="px-gutter mt-auto">
+<button class="w-full py-3 btn-primary font-label-mono text-label-mono uppercase font-bold tracking-wider">
+                New Milestone
+            </button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 p-margin-mobile md:p-margin-desktop min-h-screen">
+<!-- Header & Global Progress -->
+<header class="mb-block-gap flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+<div>
+<h2 class="font-display-xl text-display-xl uppercase tracking-tighter text-on-surface mb-2">Global Index</h2>
+<p class="font-label-mono text-label-mono text-secondary-container">Tracking all known entities across 9 regions.</p>
+</div>
+<div class="glass-panel p-4 min-w-[300px]">
+<div class="flex justify-between items-end mb-2">
+<span class="font-label-mono text-label-mono text-on-surface-variant">Global Dex Completion</span>
+<span class="font-label-mono text-label-mono font-bold text-primary-container text-lg">82%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-none overflow-hidden structural-border">
+<div class="bg-primary-container h-full glow-active" style="width: 82%"></div>
+</div>
+<div class="flex justify-between mt-2 font-label-mono text-label-mono text-xs text-on-surface-variant">
+<span>Caught: 835</span>
+<span>Seen: 1010</span>
+</div>
+</div>
+</header>
+<!-- Search & Filters -->
+<section class="glass-panel p-6 mb-block-gap flex flex-col md:flex-row gap-6 items-end">
+<div class="flex-1 w-full relative">
+<span class="material-symbols-outlined absolute left-0 bottom-3 text-on-surface-variant">search</span>
+<input class="w-full dex-input pl-8 py-3 font-label-mono text-label-mono" placeholder="Search entity by name or ID..." type="text"/>
+</div>
+<div class="flex flex-wrap gap-4 w-full md:w-auto">
+<select class="dex-input py-3 font-label-mono text-label-mono appearance-none pr-8 relative bg-transparent">
+<option>All Generations</option>
+<option>Gen I (Kanto)</option>
+<option>Gen II (Johto)</option>
+</select>
+<select class="dex-input py-3 font-label-mono text-label-mono appearance-none pr-8 bg-transparent">
+<option>All Types</option>
+<option>Fire</option>
+<option>Water</option>
+<option>Grass</option>
+</select>
+</div>
+</section>
+<!-- Bento Grid Gallery -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Dex Entry 1 -->
+<article class="glass-panel relative group overflow-hidden h-64 flex flex-col transition-all duration-300 hover:glow-secondary">
+<div class="absolute top-0 right-0 p-3 bg-surface-container-highest text-secondary-container font-label-mono text-label-mono font-bold structural-border border-t-0 border-r-0">
+                    #001
+                </div>
+<div class="flex-1 p-4 flex items-center justify-center relative z-10">
+<img class="w-32 h-32 object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-300" data-alt="A high resolution, detailed 3D render of a small, green dinosaur-like creature with a plant bulb on its back, set against a dark, minimalist industrial background. The lighting is dramatic, high-contrast, with neon cyan and harsh red rim lights highlighting the creature's textures. The mood is scientific and tactical, fitting a high-tech digital encyclopedia." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAirY-JVCO9jjN0n5Gbt9Oiu0bmtjn5t-6Vp1hIM_FkOgujTxPU3toqOlg8d2BierFGW9EFAoTvkO17YofN9tgA-HHzyJ4iQ1ISDLPO2sTUG8oLdbej8W--t3YNRxbesMWVKnugeP9a2uBfAs-NIqI8GCm05fAUFXDuXWk_YFuVsdL8NqFtyCijsEAT0i0HWPqTUkcl7ZnTvu_0xcv03kh_sp-pE8olr1frU1pzxwDCp5HabspNTISyg"/>
+</div>
+<div class="p-4 border-t border-outline-variant/30 bg-surface-container-low/80">
+<div class="flex justify-between items-end mb-2">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile font-bold uppercase tracking-tight text-on-surface">Bulbasaur</h3>
+<span class="material-symbols-outlined text-secondary-container text-sm">check_circle</span>
+</div>
+<div class="flex gap-2 mb-3">
+<span class="type-badge-grass bg-surface-container-highest px-2 py-1 font-label-mono text-[10px] uppercase tracking-wider text-on-surface-variant">Grass</span>
+<span class="type-badge-poison bg-surface-container-highest px-2 py-1 font-label-mono text-[10px] uppercase tracking-wider text-on-surface-variant">Poison</span>
+</div>
+</div>
+</article>
+<!-- Dex Entry 2 -->
+<article class="glass-panel relative group overflow-hidden h-64 flex flex-col transition-all duration-300 hover:glow-secondary">
+<div class="absolute top-0 right-0 p-3 bg-surface-container-highest text-secondary-container font-label-mono text-label-mono font-bold structural-border border-t-0 border-r-0">
+                    #004
+                </div>
+<div class="flex-1 p-4 flex items-center justify-center relative z-10">
+<img class="w-32 h-32 object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-300" data-alt="A high resolution, detailed 3D render of a small, orange salamander-like creature with a flame on its tail, set against a dark, minimalist industrial background. The lighting is dramatic, high-contrast, with fiery red and orange rim lights highlighting the creature's textures. The mood is scientific and tactical, fitting a high-tech digital encyclopedia." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiTDJSZ8JJxZddVMnSY8OgCZEymbdTkQHrGaJ3VMTlSSgz5UhgyUT-BmOgiVGjQP2Xw4N9Czwdl75LV7VEVYiVBH3JGuY2JY_A388ORr4bvKtYUOt-pEgKwWYop5DlbunTtOQsodRp7wTL-Tbq7ndyUdXkhmuNMzghnj966Lm9_PHi4SFyPKaFZCFfS327qZbV92yedeSYS5t_Y1Y5lWwFgoOD9FCCEvYjJ7uo8y5Z_Q-8il4dgy7DPg"/>
+</div>
+<div class="p-4 border-t border-outline-variant/30 bg-surface-container-low/80">
+<div class="flex justify-between items-end mb-2">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile font-bold uppercase tracking-tight text-on-surface">Charmander</h3>
+<span class="material-symbols-outlined text-secondary-container text-sm">check_circle</span>
+</div>
+<div class="flex gap-2 mb-3">
+<span class="type-badge-fire bg-surface-container-highest px-2 py-1 font-label-mono text-[10px] uppercase tracking-wider text-on-surface-variant">Fire</span>
+</div>
+</div>
+</article>
+<!-- Dex Entry 3 (Rare / Glow) -->
+<article class="glass-panel relative group overflow-hidden h-64 flex flex-col transition-all duration-300 glow-active border-primary-container/50 lg:col-span-2">
+<div class="absolute inset-0 bg-gradient-to-br from-primary-container/10 to-transparent z-0 pointer-events-none"></div>
+<div class="absolute top-0 right-0 p-3 bg-primary-container text-background font-label-mono text-label-mono font-bold structural-border border-t-0 border-r-0 z-10">
+                    #150
+                </div>
+<div class="flex-1 p-4 flex items-center justify-between relative z-10">
+<div class="w-1/2">
+<h3 class="font-display-xl text-[40px] leading-tight font-bold uppercase tracking-tighter text-primary-container mb-2">Mewtwo</h3>
+<div class="flex gap-2 mb-4">
+<span class="type-badge-flying bg-surface-container-highest px-2 py-1 font-label-mono text-[10px] uppercase tracking-wider text-on-surface-variant">Psychic</span>
+</div>
+<p class="font-label-mono text-label-mono text-on-surface-variant line-clamp-3">A genetically engineered specimen created after years of horrific gene splicing and DNA engineering experiments.</p>
+</div>
+<div class="w-1/2 flex justify-center">
+<img class="w-40 h-40 object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500" data-alt="A high resolution, detailed 3D render of a tall, bipedal feline-like humanoid creature with pale purple skin and a thick purple tail, levitating slightly. Set against a dark, minimalist industrial background. The lighting is dramatic, high-contrast, with intense neon purple and deep cyan rim lights highlighting its menacing aura. The mood is highly scientific, dark, and tactical." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBft47TiEE_XitXJPIwazduXZOOuZYL_bNk2tWIpzO1jreWK_2LgpWYZqskNi3OOG9eu6ThkJxX6uEvLWJIMPRJ62Y7RDdqkJhF6J63zWxZJFLExtwLku3hY8C9mnMPKNHhyHnn3zcmGw-WNlbi0GggtDymQnnyfnqacpXfvdIdK6DvwtI5K_dWxgNyuKM8FJcY45aseyFMjqP8itG6vt9x_73jvfhQQkuOAUx481jkYJtAcKz_IDRgyA"/>
+</div>
+</div>
+</article>
+</div>
+</main>
+</body></html>

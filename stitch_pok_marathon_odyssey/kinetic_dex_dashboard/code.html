@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kinetic Dex - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;family=Sora:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary": "#e9c400",
+                      "primary-container": "#ff5545",
+                      "surface-container-low": "#1c1b1b",
+                      "on-tertiary-fixed": "#221b00",
+                      "inverse-surface": "#e5e2e1",
+                      "secondary": "#a6e6ff",
+                      "on-primary": "#690003",
+                      "on-surface-variant": "#eabcb6",
+                      "outline-variant": "#5f3f3a",
+                      "background": "#131313",
+                      "surface": "#131313",
+                      "on-secondary-fixed": "#001f28",
+                      "primary-fixed": "#ffdad5",
+                      "primary-fixed-dim": "#ffb4aa",
+                      "surface-container": "#20201f",
+                      "surface-container-highest": "#353535",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary-fixed-variant": "#004e60",
+                      "secondary-fixed": "#b7eaff",
+                      "outline": "#b08781",
+                      "secondary-fixed-dim": "#4cd6ff",
+                      "on-secondary-container": "#00566b",
+                      "on-background": "#e5e2e1",
+                      "inverse-primary": "#c0000a",
+                      "surface-container-high": "#2a2a2a",
+                      "primary": "#ffb4aa",
+                      "on-secondary": "#003543",
+                      "error": "#ffb4ab",
+                      "on-tertiary-container": "#4c3f00",
+                      "on-primary-container": "#5c0002",
+                      "surface-tint": "#ffb4aa",
+                      "tertiary-container": "#c9a900",
+                      "surface-dim": "#131313",
+                      "on-primary-fixed-variant": "#930005",
+                      "on-surface": "#e5e2e1",
+                      "on-error": "#690005",
+                      "on-primary-fixed": "#410001",
+                      "surface-container-lowest": "#0e0e0e",
+                      "inverse-on-surface": "#313030",
+                      "surface-bright": "#393939",
+                      "on-tertiary": "#3a3000",
+                      "tertiary-fixed-dim": "#e9c400",
+                      "surface-variant": "#353535",
+                      "secondary-container": "#14d1ff",
+                      "error-container": "#93000a",
+                      "on-tertiary-fixed-variant": "#544600",
+                      "tertiary-fixed": "#ffe16d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "40px",
+                      "block-gap": "32px",
+                      "gutter": "20px",
+                      "margin-mobile": "16px",
+                      "unit": "4px"
+              },
+              "fontFamily": {
+                      "display-xl": [
+                              "Sora"
+                      ],
+                      "label-mono": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-lg": [
+                              "Sora"
+                      ],
+                      "body-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "headline-lg-mobile": [
+                              "Sora"
+                      ]
+              },
+              "fontSize": {
+                      "display-xl": [
+                              "64px",
+                              {
+                                      "lineHeight": "72px",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "label-mono": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #0D0D0D;
+            color: theme('colors.on-background');
+        }
+        
+        .glass-card {
+            background: rgba(26, 26, 26, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid #1A1A1A;
+            box-shadow: inset 1px 1px 0px 0px rgba(255, 255, 255, 0.1);
+        }
+
+        .neo-border {
+            border: 2px solid #1A1A1A;
+        }
+
+        .glow-active {
+            filter: drop-shadow(0 0 15px rgba(255, 28, 28, 0.2));
+        }
+        
+        .glow-secondary {
+            filter: drop-shadow(0 0 15px rgba(0, 209, 255, 0.2));
+        }
+
+        .btn-primary {
+            background-color: #FF1C1C;
+            color: #000;
+            border-radius: 0;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 4px 4px 0px #00D1FF;
+            transform: translate(-2px, -2px);
+        }
+
+        .node-visited {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background-color: #00D1FF;
+        }
+        
+        .node-current {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background-color: #FF1C1C;
+        }
+        
+        .node-future {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background-color: #353535;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md min-h-screen flex">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden md:flex flex-col py-margin-desktop h-full bg-surface-container-lowest h-screen w-64 fixed left-0 top-0 border-r-2 border-outline-variant z-40">
+<div class="px-6 mb-12">
+<h1 class="font-display-xl text-headline-lg text-primary-container tracking-tighter uppercase">KINETIC DEX</h1>
+<p class="font-label-mono text-label-mono text-on-surface-variant mt-2">Elite Runner v4.0</p>
+</div>
+<ul class="flex-1 flex flex-col gap-2">
+<li>
+<a class="flex items-center gap-4 px-6 py-4 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all active:translate-x-1 duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">map</span>
+<span class="font-label-mono text-label-mono uppercase">Marathon Map</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-6 py-4 bg-secondary-container text-on-secondary-fixed font-bold border-l-4 border-tertiary glow-secondary active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-label-mono text-label-mono uppercase">Game Guides</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-6 py-4 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all active:translate-x-1 duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">find_replace</span>
+<span class="font-label-mono text-label-mono uppercase">Pokedex Tracker</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-6 py-4 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all active:translate-x-1 duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">account_circle</span>
+<span class="font-label-mono text-label-mono uppercase">Profile</span>
+</a>
+</li>
+</ul>
+<div class="px-6 mt-auto">
+<button class="w-full py-4 btn-primary font-label-mono text-label-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add</span>
+                New Milestone
+            </button>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 relative min-h-screen">
+<!-- TopNavBar (Mobile & Desktop Header) -->
+<header class="w-full sticky top-0 z-50 bg-background/70 backdrop-blur-xl border-b-2 border-outline-variant flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop">
+<div class="md:hidden">
+<h1 class="font-display-xl text-headline-lg-mobile uppercase tracking-tighter text-primary-container">Kinetic Dex</h1>
+</div>
+<div class="hidden md:flex items-center gap-4 bg-surface-container-lowest px-4 py-2 border-b-2 border-outline-variant w-96 focus-within:border-secondary transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface font-label-mono w-full placeholder:text-on-surface-variant/50" placeholder="Search Dex..." type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<div class="font-label-mono text-label-mono text-primary font-bold hidden sm:block">Session: 82%</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors active:scale-95 duration-100">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors active:scale-95 duration-100">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<div class="p-margin-mobile md:p-margin-desktop pb-24 md:pb-margin-desktop max-w-7xl mx-auto flex flex-col gap-block-gap">
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Welcome Card -->
+<section class="md:col-span-12 glass-card p-6 md:p-10 relative overflow-hidden group">
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-500"></div>
+<div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+<div>
+<h2 class="font-display-xl text-headline-lg-mobile md:text-display-xl text-on-surface uppercase tracking-tighter mb-2">Welcome back,<br/><span class="text-primary-container">Trainer</span></h2>
+<p class="text-on-surface-variant max-w-md">Your Kinetic Marathon is active. System systems nominal. Prepare for the next phase of the challenge.</p>
+</div>
+<div class="text-right">
+<div class="font-label-mono text-on-surface-variant mb-1 uppercase tracking-widest">Global Completion</div>
+<div class="font-display-xl text-5xl md:text-6xl text-secondary-container drop-shadow-[0_0_10px_rgba(20,209,255,0.3)]">42%</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Marathon Map - KINETIC DEX</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Sora:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#e9c400",
+                    "primary-container": "#ff5545",
+                    "surface-container-low": "#1c1b1b",
+                    "on-tertiary-fixed": "#221b00",
+                    "inverse-surface": "#e5e2e1",
+                    "secondary": "#a6e6ff",
+                    "on-primary": "#690003",
+                    "on-surface-variant": "#eabcb6",
+                    "outline-variant": "#5f3f3a",
+                    "background": "#131313",
+                    "surface": "#131313",
+                    "on-secondary-fixed": "#001f28",
+                    "primary-fixed": "#ffdad5",
+                    "primary-fixed-dim": "#ffb4aa",
+                    "surface-container": "#20201f",
+                    "surface-container-highest": "#353535",
+                    "on-error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#004e60",
+                    "secondary-fixed": "#b7eaff",
+                    "outline": "#b08781",
+                    "secondary-fixed-dim": "#4cd6ff",
+                    "on-secondary-container": "#00566b",
+                    "on-background": "#e5e2e1",
+                    "inverse-primary": "#c0000a",
+                    "surface-container-high": "#2a2a2a",
+                    "primary": "#ffb4aa",
+                    "on-secondary": "#003543",
+                    "error": "#ffb4ab",
+                    "on-tertiary-container": "#4c3f00",
+                    "on-primary-container": "#5c0002",
+                    "surface-tint": "#ffb4aa",
+                    "tertiary-container": "#c9a900",
+                    "surface-dim": "#131313",
+                    "on-primary-fixed-variant": "#930005",
+                    "on-surface": "#e5e2e1",
+                    "on-error": "#690005",
+                    "on-primary-fixed": "#410001",
+                    "surface-container-lowest": "#0e0e0e",
+                    "inverse-on-surface": "#313030",
+                    "surface-bright": "#393939",
+                    "on-tertiary": "#3a3000",
+                    "tertiary-fixed-dim": "#e9c400",
+                    "surface-variant": "#353535",
+                    "secondary-container": "#14d1ff",
+                    "error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#544600",
+                    "tertiary-fixed": "#ffe16d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "40px",
+                    "block-gap": "32px",
+                    "gutter": "20px",
+                    "margin-mobile": "16px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "display-xl": [
+                            "Sora"
+                    ],
+                    "label-mono": [
+                            "JetBrains Mono"
+                    ],
+                    "headline-lg": [
+                            "Sora"
+                    ],
+                    "body-md": [
+                            "Hanken Grotesk"
+                    ],
+                    "headline-lg-mobile": [
+                            "Sora"
+                    ]
+            },
+            "fontSize": {
+                    "display-xl": [
+                            "64px",
+                            {
+                                    "lineHeight": "72px",
+                                    "letterSpacing": "-0.04em",
+                                    "fontWeight": "800"
+                            }
+                    ],
+                    "label-mono": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "700"
+                            }
+                    ]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: #0D0D0D;
+            color: #e5e2e1;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .glass-panel {
+            background: rgba(26, 26, 26, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 1px 1px 0px 0px rgba(255, 255, 255, 0.1);
+        }
+
+        .neon-glow-primary {
+            box-shadow: 0 0 15px rgba(255, 28, 28, 0.2);
+        }
+
+        .neon-glow-secondary {
+            box-shadow: 0 0 15px rgba(0, 209, 255, 0.2);
+        }
+
+        .hex-node {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+        
+        .diamond-node {
+             clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+
+        .tech-border {
+            border: 2px solid #1A1A1A;
+        }
+        
+        .btn-primary {
+            background-color: #FF1C1C;
+            color: black;
+            border-radius: 0;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            box-shadow: -4px 4px 0px 0px #00D1FF;
+            transform: translate(2px, -2px);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid #FFFFFF;
+            border-radius: 0;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .roadmap-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00D1FF 30%, #353535 30%, #353535 70%, #FF1C1C 70%);
+            z-index: 0;
+            transform: translateY(-50%);
+        }
+
+        /* Hide scrollbar for roadmap */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+</head>
+<body class="font-body-md bg-background text-on-surface antialiased min-h-screen flex flex-col md:flex-row">
+<!-- Mobile Top Nav -->
+<nav class="md:hidden flex justify-between items-center h-16 px-margin-mobile w-full bg-background/70 backdrop-blur-xl border-b-2 border-outline-variant sticky top-0 z-50">
+<div class="font-display-xl text-headline-lg-mobile uppercase tracking-tighter text-primary-container">Kinetic Dex</div>
+<div class="flex items-center gap-4">
+<span class="text-primary font-label-mono text-label-mono">Session: 82%</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer" data-icon="settings">settings</span>
+</div>
+</nav>
+<!-- Desktop Side Nav -->
+<aside class="hidden md:flex flex-col py-margin-desktop h-full bg-surface-container-lowest h-screen w-64 fixed left-0 top-0 border-r-2 border-outline-variant z-50">
+<div class="px-6 mb-8">
+<h1 class="font-display-xl text-headline-lg text-primary-container uppercase tracking-tighter mb-1">KINETIC DEX</h1>
+<p class="font-label-mono text-label-mono text-secondary-container">Elite Runner v4.0</p>
+</div>
+<nav class="flex-1 flex flex-col gap-2 px-4">
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-fixed font-bold border-l-4 border-tertiary hover:bg-surface-container-highest transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="map" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-label-mono text-label-mono">Marathon Map</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-label-mono text-label-mono">Game Guides</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="Analytics">find_replace</span>
+<span class="font-label-mono text-label-mono">Pokedex Tracker</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-label-mono text-label-mono">Profile</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full btn-primary py-3 font-label-mono text-label-mono font-bold uppercase tracking-wider">New Milestone</button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 p-margin-mobile md:p-margin-desktop min-h-screen relative overflow-hidden">
+<!-- Header Section -->
+<header class="mb-block-gap flex flex-col md:flex-row justify-between items-start md:items-end gap-6 relative z-10">
+<div>
+<h2 class="font-display-xl text-display-xl text-on-surface uppercase tracking-tighter mb-2 md:text-headline-lg-mobile text-headline-lg-mobile md:text-display-xl">Marathon Route</h2>
+<p class="font-label-mono text-label-mono text-secondary flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">speed</span>
+                    CURRENT PACE: +1h 24m AHEAD OF WR
+                </p>
+</div>
+<div class="flex flex-wrap gap-3">
+<div class="glass-panel px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-surface-container-high transition-colors tech-border">
+<div class="w-2 h-2 rounded-full bg-secondary neon-glow-secondary"></div>
+<span class="font-label-mono text-label-mono text-on-surface">Speedrun Mode</span>
+</div>
+<div class="glass-panel px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-surface-container-high transition-colors tech-border opacity-50">
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+<span class="font-label-mono text-label-mono text-on-surface-variant">Casual Mode</span>
+</div>
+<div class="glass-panel px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-surface-container-high transition-colors tech-border opacity-50">
+<div class="w-2 h-2 rounded-full bg-primary-container"></div>
+<span class="font-label-mono text-label-mono text-on-surface-variant">Hardcore/Nuzlocke</span>
+</div>
+</div>
+</header>
+<!-- Dynamic Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter relative z-10">
+<!-- Roadmap Section (Spans 8 cols) -->
+<section class="lg:col-span-8 flex flex-col gap-6">
+<!-- Roadmap Container -->
+<div class="glass-panel p-6 relative overflow-hidden h-[400px] flex items-center tech-border">
+<!-- Background ambient map image -->
+<div class="absolute inset-0 opacity-20 pointer-events-none mix-blend-screen" data-alt="A highly detailed, neon-lit, high-tech isometric map of fictional digital regions. The visual style is Industrial Digitalism, featuring dark backgrounds (#0D0D0D) with glowing cyan (#00D1FF) and stark red (#FF1C1C) structural lines connecting various zones. The lighting is harsh yet atmospheric, creating a sense of a raw, competitive power-user interface." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDwk-WojTwVziQaFjfjnfAZDPu3ZfZJlwaidNWd4u8XwazwnzQ9ukGLeCNHj4Cn44uxaddWCOFQa5YfAVf1wi8xjN7151Mjxv7B02lXQEb3zmB2vp6oroTTyNHgyVjHv_v_43U4rRiaD-8h261iy4BewL-37qsegYqWg7YpI9DLC2l6qUqD4yRoDV7hYE5IUysnpE0duP9dC7tT16PRegL5-tpegtoqkOPsk3epT_n-OMBsde5Ii_ZoHQ')"></div>
+<div class="relative w-full overflow-x-auto no-scrollbar py-12 flex items-center gap-16 px-12 snap-x snap-mandatory">
+<!-- Horizontal Line -->
+<div class="roadmap-line"></div>
+<!-- Node 1: Completed -->
+<div class="relative flex flex-col items-center gap-4 snap-center shrink-0 group z-10">
+<div class="w-16 h-16 hex-node bg-secondary flex items-center justify-center neon-glow-secondary cursor-pointer transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-on-secondary-fixed text-3xl font-bold">check</span>
+</div>
+<div class="glass-panel p-3 text-center tech-border absolute top-20 w-48 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+<h3 class="font-headline-lg text-body-md uppercase font-bold text-secondary">Gen I: Red/Blue</h3>
+<p class="font-label-mono text-label-mono text-on-surface-variant mt-1">Time: 1h 45m</p>
+<div class="flex justify-center gap-1 mt-2 text-tertiary">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]">star</span>
+<span class="material-symbols-outlined text-[14px]">star</span>
+</div>
+</div>
+</div>
+<!-- Node 2: Completed -->
+<div class="relative flex flex-col items-center gap-4 snap-center shrink-0 group z-10">
+<div class="w-16 h-16 hex-node bg-secondary flex items-center justify-center neon-glow-secondary cursor-pointer transition-transform group-hover:scale-110 translate-y-8">
+<span class="material-symbols-outlined text-on-secondary-fixed text-3xl font-bold">check</span>
+</div>
+<div class="glass-panel p-3 text-center tech-border absolute top-28 w-48 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+<h3 class="font-headline-lg text-body-md uppercase font-bold text-secondary">Gen II: Gold/Silver</h3>
+<p class="font-label-mono text-label-mono text-on-surface-variant mt-1">Time: 3h 12m</p>
+<div class="flex justify-center gap-1 mt-2 text-tertiary">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]">star</span>
+</div>
+</div>
+</div>
+<!-- Node 3: Current Destination -->
+<div class="relative flex flex-col items-center gap-4 snap-center shrink-0 group z-10">
+<!-- Animated Pulse behind current node -->
+<div class="absolute inset-0 w-24 h-24 -left-4 -top-4 bg-primary-container rounded-full opacity-20 animate-ping"></div>
+<div class="w-20 h-20 diamond-node bg-primary-container flex items-center justify-center neon-glow-primary cursor-pointer transition-transform group-hover:scale-110 -translate-y-4">
+<span class="material-symbols-outlined text-on-primary-container text-4xl font-bold">my_location</span>
+</div>
+<!-- Current Node Details (always visible) -->
+<div class="glass-panel p-4 text-center tech-border absolute top-24 w-56 shadow-[0_0_15px_rgba(255,28,28,0.3)]">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary-container"></div>
+<h3 class="font-headline-lg text-body-md uppercase font-bold text-primary-fixed">Gen III: Emerald</h3>
+<p class="font-label-mono text-label-mono text-on-surface mt-1">In Progress: 0h 45m</p>
+<div class="flex justify-center gap-1 mt-2 text-tertiary">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<!-- Node 4: Future -->
+<div class="relative flex flex-col items-center gap-4 snap-center shrink-0 group z-10">
+<div class="w-16 h-16 hex-node bg-surface-container-highest flex items-center justify-center cursor-pointer transition-transform group-hover:scale-110 translate-y-6 border-2 border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl font-bold">lock</span>
+</div>
+<div class="glass-panel p-3 text-center tech-border absolute top-24 w-48 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+<h3 class="font-headline-lg text-body-md uppercase font-bold text-on-surface-variant">Gen IV: Platinum</h3>
+<p class="font-label-mono text-label-mono text-outline-variant mt-1">Est. Time: 4h 00m</p>
+</div>
+</div>
+<!-- Node 5: Future -->
+<div class="relative flex flex-col items-center gap-4 snap-center shrink-0 group z-10">
+<div class="w-16 h-16 hex-node bg-surface-container-highest flex items-center justify-center cursor-pointer transition-transform group-hover:scale-110 border-2 border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl font-bold">lock</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="flex justify-between items-center bg-surface-container-low p-4 tech-border">
+<div class="flex gap-4 items-center">
+<span class="font-label-mono text-label-mono text-on-surface-variant">RUN STATUS:</span>
+<span class="font-label-mono text-label-mono text-secondary font-bold">ACTIVE</span>
+</div>
+<button class="btn-primary px-8 py-3 font-label-mono text-label-mono font-bold uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span>
+                         Resume Run
+                     </button>
+</div>
+</section>
+<!-- Side Panel (Spans 4 cols) -->
+<section class="lg:col-span-4 flex flex-col gap-6">
+<!-- Rules Panel -->
+<div class="glass-panel tech-border flex flex-col h-full relative">
+<!-- Accent Edge -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-tertiary"></div>
+<div class="p-6 border-b-2 border-surface-container-highest">
+<h3 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg uppercase text-on-surface tracking-tight">Marathon Rules</h3>
+<p class="font-label-mono text-label-mono text-on-surface-variant mt-1">Speedrun Category: Any% Glitchless</p>
+</div>
+<div class="p-6 flex-1 flex flex-col gap-4 overflow-y-auto no-scrollbar">
+<!-- Rule 1 -->
+<div class="flex items-start gap-3">
+<div class="w-6 h-6 shrink-0 border-2 border-tertiary flex items-center justify-center mt-1">
+<span class="material-symbols-outlined text-tertiary text-[16px] font-bold">close</span>
+</div>
+<div>
+<h4 class="font-label-mono text-label-mono text-on-surface font-bold uppercase">No Glitches</h4>
+<p class="text-[14px] text-on-surface-variant mt-1 leading-tight">Exploiting game bugs to skip sections or manipulate RNG is strictly prohibited.</p>
+</div>
+</div>
+<!-- Rule 2 -->
+<div class="flex items-start gap-3">
+<div class="w-6 h-6 shrink-0 border-2 border-tertiary flex items-center justify-center mt-1">
+<span class="material-symbols-outlined text-tertiary text-[16px] font-bold">20mp</span>
+</div>
+<div>
+<h4 class="font-label-mono text-label-mono text-on-surface font-bold uppercase">Catch All Legendaries</h4>
+<p class="text-[14px] text-on-surface-variant mt-1 leading-tight">Box legendary must be caught before confronting the Elite Four in each generation.</p>
+</div>
+</div>
+<!-- Rule 3 -->
+<div class="flex items-start gap-3">
+<div class="w-6 h-6 shrink-0 border-2 border-tertiary flex items-center justify-center mt-1">
+<span class="material-symbols-outlined text-tertiary text-[16px] font-bold">timer</span>
+</div>
+<div>
+<h4 class="font-label-mono text-label-mono text-on-surface font-bold uppercase">In-Game Time (IGT)</h4>
+<p class="text-[14px] text-on-surface-variant mt-1 leading-tight">Timing is based strictly on the final save file time, not real-time.</p>
+</div>
+</div>
+<!-- Rule 4 -->
+<div class="flex items-start gap-3 opacity-60">
+<div class="w-6 h-6 shrink-0 border-2 border-outline-variant flex items-center justify-center mt-1">
+<span class="material-symbols-outlined text-outline-variant text-[16px]">info</span>
+</div>
+<div>
+<h4 class="font-label-mono text-label-mono text-on-surface font-bold uppercase">Trade Evolutions</h4>
+<p class="text-[14px] text-on-surface-variant mt-1 leading-tight">Allowed only via specific patched ROMs approved by the community.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<script>
+        // Simple drag to scroll for the roadmap
+        const slider = document.querySelector('.snap-x');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            slider.classList.add('cursor-grabbing');
+            slider.classList.remove('snap-mandatory'); // Disable snapping while dragging for smoother feel
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+            slider.classList.remove('cursor-grabbing');
+            slider.classList.add('snap-mandatory');
+        });
+        
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+            slider.classList.remove('cursor-grabbing');
+            slider.classList.add('snap-mandatory');
+        });
+        
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2; // Scroll-fast
+            slider.scrollLeft = scrollLeft - walk;
+        });
+    </script>
+</body></html>

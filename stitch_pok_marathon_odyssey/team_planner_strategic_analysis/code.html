@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kinetic Dex - Strategic Team Planner</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@700;800&amp;family=Hanken+Grotesk:wght@400&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#5c0002",
+                        "surface-container-highest": "#353535",
+                        "surface-container-high": "#2a2a2a",
+                        "on-background": "#e5e2e1",
+                        "on-tertiary-container": "#4c3f00",
+                        "tertiary-fixed": "#ffe16d",
+                        "on-surface": "#e5e2e1",
+                        "inverse-on-surface": "#313030",
+                        "background": "#131313",
+                        "surface-container-low": "#1c1b1b",
+                        "inverse-primary": "#c0000a",
+                        "outline-variant": "#5f3f3a",
+                        "on-primary-fixed-variant": "#930005",
+                        "on-surface-variant": "#eabcb6",
+                        "on-primary": "#690003",
+                        "on-tertiary": "#3a3000",
+                        "secondary-container": "#14d1ff",
+                        "tertiary": "#e9c400",
+                        "on-tertiary-fixed": "#221b00",
+                        "on-secondary-fixed": "#001f28",
+                        "primary": "#ffb4aa",
+                        "outline": "#b08781",
+                        "on-tertiary-fixed-variant": "#544600",
+                        "surface-dim": "#131313",
+                        "surface-variant": "#353535",
+                        "primary-fixed-dim": "#ffb4aa",
+                        "primary-fixed": "#ffdad5",
+                        "on-secondary-fixed-variant": "#004e60",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#4cd6ff",
+                        "primary-container": "#ff5545",
+                        "on-error-container": "#ffdad6",
+                        "inverse-surface": "#e5e2e1",
+                        "secondary": "#a6e6ff",
+                        "tertiary-container": "#c9a900",
+                        "surface": "#131313",
+                        "on-secondary-container": "#00566b",
+                        "secondary-fixed": "#b7eaff",
+                        "surface-bright": "#393939",
+                        "error-container": "#93000a",
+                        "surface-container": "#20201f",
+                        "on-error": "#690005",
+                        "on-primary-fixed": "#410001",
+                        "surface-tint": "#ffb4aa",
+                        "on-secondary": "#003543",
+                        "tertiary-fixed-dim": "#e9c400",
+                        "surface-container-lowest": "#0e0e0e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "40px",
+                        "unit": "4px",
+                        "block-gap": "32px",
+                        "margin-mobile": "16px",
+                        "gutter": "20px"
+                    },
+                    "fontFamily": {
+                        "label-mono": ["JetBrains Mono"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Sora"],
+                        "headline-lg-mobile": ["Sora"],
+                        "display-xl": ["Sora"]
+                    },
+                    "fontSize": {
+                        "label-mono": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "display-xl": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.04em", "fontWeight": "800" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #0D0D0D; color: #e5e2e1; margin: 0; padding: 0; }
+        .glass-card {
+            background-color: rgba(26, 26, 26, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+        }
+        .type-badge-water { border-left: 4px solid #6390F0; }
+        .type-badge-electric { border-left: 4px solid #F7D02C; }
+        .type-badge-fire { border-left: 4px solid #EE8130; }
+        .type-badge-grass { border-left: 4px solid #7AC74C; }
+        .type-badge-dragon { border-left: 4px solid #6F35FC; }
+        .type-badge-steel { border-left: 4px solid #B7B7CE; }
+        
+        .hardware-border {
+            border: 2px solid #1A1A1A;
+        }
+        
+        .primary-btn {
+            background-color: #FF1C1C;
+            color: #000;
+            border-radius: 0;
+            transition: all 0.2s ease;
+        }
+        .primary-btn:hover {
+            box-shadow: 4px 4px 0 0 #00D1FF;
+        }
+        
+        .glow-active {
+            filter: drop-shadow(0 0 15px rgba(0, 209, 255, 0.2));
+        }
+        
+        /* Custom scrollbar for raw feel */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0D0D0D; }
+        ::-webkit-scrollbar-thumb { background: #1A1A1A; border: 1px solid #353535; }
+    </style>
+</head>
+<body class="font-body-md text-body-md bg-background overflow-x-hidden flex h-screen w-screen">
+<!-- SideNavBar (Shared Component) -->
+<nav class="bg-surface-container-lowest h-screen w-64 fixed left-0 top-0 border-r-2 border-outline-variant flex flex-col py-margin-desktop hidden md:flex z-50">
+<div class="px-6 mb-12">
+<h1 class="font-display-xl text-headline-lg text-primary-container tracking-tighter uppercase">KINETIC DEX</h1>
+<p class="font-label-mono text-label-mono text-on-surface-variant mt-2">Elite Runner v4.0</p>
+</div>
+<div class="flex-1 flex flex-col gap-2 px-4">
+<a class="flex items-center gap-4 px-4 py-3 rounded-none text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-label-mono text-label-mono">Marathon Map</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-none text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-label-mono text-label-mono">Game Guides</span>
+</a>
+<!-- Active State Logic Applied Here based on 'Pokedex Tracker' / Team Planner context -->
+<a class="flex items-center gap-4 px-4 py-3 rounded-none bg-secondary-container text-on-secondary-fixed font-bold border-l-4 border-tertiary transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="Analytics" style="font-variation-settings: 'FILL' 1;">find_replace</span>
+<span class="font-label-mono text-label-mono">Pokedex Tracker</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-none text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-label-mono text-label-mono">Profile</span>
+</a>
+</div>
+<div class="px-6 mt-auto">
+<button class="w-full primary-btn font-label-mono text-label-mono py-3 font-bold uppercase tracking-wider">
+                New Milestone
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 md:ml-64 p-margin-mobile md:p-margin-desktop h-full overflow-y-auto">
+<!-- Header area -->
+<header class="mb-block-gap flex justify-between items-end border-b-2 border-surface-container-high pb-4">
+<div>
+<h2 class="font-display-xl text-display-xl text-on-background uppercase tracking-tighter">Strategic Team Planner</h2>
+<p class="font-label-mono text-label-mono text-secondary-container mt-2">SYS_MSG: OPTIMIZE FOR REGIONAL TOURNAMENT V4</p>
+</div>
+<div class="flex gap-4">
+<button class="bg-transparent border-2 border-surface-container-highest text-on-surface px-6 py-2 font-label-mono text-label-mono hover:border-secondary-container transition-colors">
+                    LOAD PRESET
+                </button>
+<button class="primary-btn px-6 py-2 font-label-mono text-label-mono font-bold">
+                    ANALYZE TEAM
+                </button>
+</div>
+</header>
+<!-- Asymmetric Layout: 7 columns for slots, 5 for analysis -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Team Slots Grid (7 cols) -->
+<div class="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+<!-- Slot 1 -->
+<div class="glass-card p-4 hardware-border hover:glow-active transition-all duration-300 transform hover:-translate-y-1">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-mono text-label-mono text-surface-container-highest bg-primary px-2 py-1">SLOT_01</span>
+<span class="material-symbols-outlined text-secondary-container cursor-pointer hover:text-on-background">swap_horiz</span>
+</div>
+<div class="h-32 mb-4 bg-surface-container-lowest border border-surface-container-high relative flex justify-center items-center overflow-hidden">
+<img class="absolute w-full h-full object-cover opacity-80 mix-blend-screen" data-alt="A highly detailed, neon-lit digital illustration of a fierce bipedal dragon-type creature with metallic scales and glowing blue accents, standing in a dark, industrial testing chamber. The lighting is dramatic, highlighting its angular features and aggressive stance. Technical UI overlays and grids frame the creature, enhancing the cyber-punk aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMw_nrVDKTsXNyGhJPe7Ww5R2A7IZB40jlAKB4omNbaVOBezCAN-IBQFtNQC0-WAZ9mEpbIPHequR_V0rt1KmJZZC4dEEbBIjR72DYOl1iYq3AKhz3aQEZ_9NIeoG6nmBWYS0hGH_oW6mOIIxP2clJpiduwSuMjymeZTKJtK9KCWRUQKQ5BUPLisezB0sltXFWg84oW1hGOthWpvG5ZHbQfSstYFT6aLI9bB2_P1zoHhuF29yU1gvYSQ"/>
+</div>
+<div class="flex justify-between items-center mb-2">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">Garchomp</h3>
+<span class="font-label-mono text-label-mono text-on-surface-variant">LV. 50</span>
+</div>
+<div class="flex gap-2 mb-4">
+<div class="type-badge-dragon bg-surface-container-lowest px-2 py-1 font-label-mono text-[10px] text-on-background uppercase">DRAGON</div>
+<div class="type-badge-grass bg-surface-container-lowest px-2 py-1 font-label-mono text-[10px] text-on-background uppercase">GROUND</div>
+</div>
+<div class="border-t border-surface-container-high pt-2">
+<p class="font-label-mono text-[10px] text-secondary-container mb-1">MOVESET</p>
+<ul class="font-label-mono text-label-mono text-on-surface-variant space-y-1">
+<li class="flex justify-between"><span>Earthquake</span> <span class="text-on-background">100</span></li>
+<li class="flex justify-between"><span>Dragon Claw</span> <span class="text-on-background">80</span></li>
+<li class="flex justify-between"><span>Swords Dance</span> <span class="text-on-background">--</span></li>
+<li class="flex justify-between"><span>Protect</span> <span class="text-on-background">--</span></li>
+</ul>
+</div>
+</div>
+<!-- Slot 2 -->
+<div class="glass-card p-4 hardware-border hover:glow-active transition-all duration-300 transform hover:-translate-y-1">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-mono text-label-mono text-surface-container-highest bg-surface-variant px-2 py-1 text-on-surface">SLOT_02</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-on-background">swap_horiz</span>
+</div>
+<div class="h-32 mb-4 bg-surface-container-lowest border border-surface-container-high relative flex justify-center items-center overflow-hidden">
+<img class="absolute w-full h-full object-cover opacity-80 mix-blend-screen" data-alt="A highly detailed, neon-lit digital illustration of a sleek, aerodynamic bird-like creature clad in metallic armor, soaring through a dark, grid-patterned virtual sky. The environment features high-contrast lighting with harsh shadows and bright yellow neon accents defining the bird's speed lines. The visual style is aggressive industrial digitalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvJYLx42d86t-bbypFtJBpCQXhZffIrsAvKUFQutb3ZGMhMImcNWCf5caTx09aPDIXa_FOXjQL6L-N2pHMHe9afFFPxRbjsB6EdHmcoLSRonAvBwxe8pgH6a-hzSPKiRHbmKXRSPmAPR1jNP6ip3X8YL9AN1466gS_zY_13Xp7HpkjWonoHta89tTaudmerC3GBjl95O7Xu4LVa9VQNYvEcVXfCMQOxv9EihZbXeYO6hgtv6GgRUrC3A"/>
+</div>
+<div class="flex justify-between items-center mb-2">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">Corviknight</h3>
+<span class="font-label-mono text-label-mono text-on-surface-variant">LV. 50</span>
+</div>
+<div class="flex gap-2 mb-4">
+<div class="type-badge-steel bg-surface-container-lowest px-2 py-1 font-label-mono text-[10px] text-on-background uppercase">STEEL</div>
+<div class="type-badge-steel bg-surface-container-lowest px-2 py-1 font-label-mono text-[10px] text-on-background uppercase">FLYING</div>
+</div>
+<div class="border-t border-surface-container-high pt-2">
+<p class="font-label-mono text-[10px] text-secondary-container mb-1">MOVESET</p>
+<ul class="font-label-mono text-label-mono text-on-surface-variant space-y-1">
+<li class="flex justify-between"><span>Brave Bird</span> <span class="text-on-background">120</span></li>
+<li class="flex justify-between"><span>Iron Head</span> <span class="text-on-background">80</span></li>
+<li class="flex justify-between"><span>Roost</span> <span class="text-on-background">--</span></li>
+<li class="flex justify-between"><span>U-turn</span> <span class="text-on-background">70</span></li>
+</ul>
+</div>
+</div>
+<!-- Empty Slots for demonstration of layout structure -->
+<div class="glass-card p-4 hardware-border border-dashed border-surface-container-high flex flex-col items-center justify-center min-h-[300px] cursor-pointer hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant mb-2">add</span>
+<span class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">Empty Slot</span>
+</div>
+<div class="glass-card p-4 hardware-border border-dashed border-surface-container-high flex flex-col items-center justify-center min-h-[300px] cursor-pointer hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant mb-2">add</span>
+<span class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">Empty Slot</span>
+</div>
+<div class="glass-card p-4 hardware-border border-dashed border-surface-container-high flex flex-col items-center justify-center min-h-[300px] cursor-pointer hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant mb-2">add</span>
+<span class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">Empty Slot</span>
+</div>
+<div class="glass-card p-4 hardware-border border-dashed border-surface-container-high flex flex-col items-center justify-center min-h-[300px] cursor-pointer hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant mb-2">add</span>
+<span class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">Empty Slot</span>
+</div>
+</div>
+<!-- Team Stats & Analysis Sidebar (5 cols) -->
+<div class="md:col-span-5 flex flex-col gap-4">
+<!-- Synergy Analysis Panel -->
+<div class="glass-card hardware-border p-6 h-full flex flex-col">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary-container uppercase tracking-tighter mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">hub</span>
+                        Synergy Matrix
+                    </h3>
+<div class="flex-1 space-y-4">
+<!-- Synergy Item -->
+<div class="border-l-4 border-secondary-container bg-surface-container-lowest p-3">
+<p class="font-label-mono text-[10px] text-secondary-container mb-1 uppercase tracking-wider">Defensive Core</p>
+<p class="font-body-md text-body-md text-on-background">
+<span class="text-primary font-bold">Garchomp</span> + <span class="text-tertiary-fixed font-bold">Corviknight</span> provides excellent hazard control. Corviknight covers Garchomp's Ice weakness perfectly.
+                            </p>
+</div>
+<!-- Alert Item -->
+<div class="border-l-4 border-primary p-3 bg-surface-container-lowest relative overflow-hidden">
+<div class="absolute right-0 top-0 opacity-10">
+<span class="material-symbols-outlined text-6xl">warning</span>
+</div>
+<p class="font-label-mono text-[10px] text-primary mb-1 uppercase tracking-wider">Vulnerability Detected</p>
+<p class="font-body-md text-body-md text-on-background">
+                                Current configuration lacks Special Attack pressure. Consider adding a Water or Electric special sweeper to break physical walls.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Type Coverage Chart -->
+<div class="glass-card hardware-border p-6">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background uppercase tracking-tighter">Offensive Coverage</h3>
+<span class="font-label-mono text-label-mono text-on-surface-variant">DATA: LIVE</span>
+</div>
+<div class="space-y-3 font-label-mono text-label-mono">
+<div class="flex items-center gap-4">
+<span class="w-16 text-on-surface-variant">Super Eff.</span>
+<div class="flex-1 h-2 bg-surface-container-high overflow-hidden">
+<div class="h-full bg-secondary-container w-[75%]"></div>
+</div>
+<span class="text-on-background">12 Types</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="w-16 text-on-surface-variant">Neutral</span>
+<div class="flex-1 h-2 bg-surface-container-high overflow-hidden">
+<div class="h-full bg-tertiary w-[95%]"></div>
+</div>
+<span class="text-on-background">17 Types</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="w-16 text-on-surface-variant">Resisted</span>
+<div class="flex-1 h-2 bg-surface-container-high overflow-hidden">
+<div class="h-full bg-primary w-[10%]"></div>
+</div>
+<span class="text-on-background">1 Type</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

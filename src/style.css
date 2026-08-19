@@ -1,0 +1,115 @@
+/* Kinetic Dex - Custom Neon & Dark Theme Styles */
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Sora:wght@100..800&display=swap');
+
+:root {
+  --bg-surface: #131313;
+  --bg-surface-low: #1c1b1b;
+  --bg-surface-high: #2a2a2a;
+  --bg-surface-lowest: #0e0e0e;
+  --primary-red: #ff1c1c;
+  --primary-red-container: #ff5545;
+  --accent-cyan: #00f2ff;
+  --accent-cyan-container: #14d1ff;
+  --accent-gold: #e9c400;
+  --text-on-surface: #e5e2e1;
+}
+
+body {
+  font-family: 'Hanken Grotesk', sans-serif;
+  background-color: var(--bg-surface);
+  color: var(--text-on-surface);
+  overflow-x: hidden;
+}
+
+.font-sora {
+  font-family: 'Sora', sans-serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #131313;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff5545;
+}
+
+/* Neon Glow Utilities */
+.glow-red {
+  box-shadow: 0 0 15px rgba(255, 28, 28, 0.4), inset 0 0 10px rgba(255, 28, 28, 0.2);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.4), inset 0 0 10px rgba(0, 242, 255, 0.2);
+}
+
+.glow-gold {
+  box-shadow: 0 0 15px rgba(233, 196, 0, 0.4), inset 0 0 10px rgba(233, 196, 0, 0.2);
+}
+
+.text-glow-red {
+  text-shadow: 0 0 10px rgba(255, 28, 28, 0.6);
+}
+
+.text-glow-cyan {
+  text-shadow: 0 0 10px rgba(0, 242, 255, 0.6);
+}
+
+.border-neon-red {
+  border-color: rgba(255, 28, 28, 0.5);
+}
+
+.border-neon-cyan {
+  border-color: rgba(0, 242, 255, 0.5);
+}
+
+/* Glassmorphism */
+.glass-panel {
+  background: rgba(28, 27, 27, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Pulse animation */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.02); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s infinite ease-in-out;
+}
+
+/* Type Badge Colors */
+.type-normal   { background: #A8A878; color: #111; }
+.type-fire     { background: #F08030; color: #fff; }
+.type-water    { background: #6890F0; color: #fff; }
+.type-grass    { background: #78C850; color: #111; }
+.type-electric { background: #F8D030; color: #111; }
+.type-ice      { background: #98D8D8; color: #111; }
+.type-fighting { background: #C03028; color: #fff; }
+.type-poison   { background: #A040A0; color: #fff; }
+.type-ground   { background: #E0C068; color: #111; }
+.type-flying   { background: #A890F0; color: #fff; }
+.type-psychic  { background: #F85888; color: #fff; }
+.type-bug      { background: #A8B820; color: #111; }
+.type-rock     { background: #B8A038; color: #fff; }
+.type-ghost    { background: #705898; color: #fff; }
+.type-dragon   { background: #7038F8; color: #fff; }
+.type-dark     { background: #705848; color: #fff; }
+.type-steel    { background: #B8B8D0; color: #111; }
+.type-fairy    { background: #EE99AC; color: #111; }

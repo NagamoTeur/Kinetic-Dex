@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kinetic Dex - Pokémon Marathon Command Platform</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Sora:wght@100..800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+  <!-- Tailwind CSS CDN with Plugins -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background": "#131313",
+            "surface": "#131313",
+            "surface-container-low": "#1c1b1b",
+            "surface-container": "#20201f",
+            "surface-container-high": "#2a2a2a",
+            "surface-container-highest": "#353535",
+            "surface-container-lowest": "#0e0e0e",
+            "primary": "#ffb4aa",
+            "primary-container": "#ff5545",
+            "secondary": "#a6e6ff",
+            "secondary-container": "#14d1ff",
+            "tertiary": "#e9c400",
+            "tertiary-container": "#c9a900"
+          },
+          fontFamily: {
+            "sora": ["Sora", "sans-serif"],
+            "mono": ["JetBrains Mono", "monospace"],
+            "body": ["Hanken Grotesk", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="./src/style.css"/>
+</head>
+<body class="bg-[#131313] text-[#e5e2e1] min-h-screen flex flex-col antialiased selection:bg-[#ff1c1c] selection:text-white">
+
+  <!-- Top Navigation Header -->
+  <header id="top-navbar" class="sticky top-0 z-40 w-full"></header>
+
+  <!-- Main Body Layout: Side Nav + App View Content -->
+  <div class="flex-1 flex overflow-hidden">
+    
+    <!-- Left Navigation Sidebar -->
+    <div id="side-navbar" class="sticky top-[57px] z-30 hidden md:block"></div>
+
+    <!-- Main View Container -->
+    <main id="app-content" class="flex-1 min-h-[calc(100vh-57px)] overflow-y-auto bg-[#131313]"></main>
+
+  </div>
+
+  <!-- Main JavaScript ES Module -->
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>

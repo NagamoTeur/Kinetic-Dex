@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Game Guides - Pokemon Red/Blue</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@700;800&amp;family=JetBrains+Mono:wght@500&amp;family=Hanken+Grotesk:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#e9c400",
+                        "primary-container": "#ff5545",
+                        "surface-container-low": "#1c1b1b",
+                        "on-tertiary-fixed": "#221b00",
+                        "inverse-surface": "#e5e2e1",
+                        "secondary": "#a6e6ff",
+                        "on-primary": "#690003",
+                        "on-surface-variant": "#eabcb6",
+                        "outline-variant": "#5f3f3a",
+                        "background": "#131313",
+                        "surface": "#131313",
+                        "on-secondary-fixed": "#001f28",
+                        "primary-fixed": "#ffdad5",
+                        "primary-fixed-dim": "#ffb4aa",
+                        "surface-container": "#20201f",
+                        "surface-container-highest": "#353535",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#004e60",
+                        "secondary-fixed": "#b7eaff",
+                        "outline": "#b08781",
+                        "secondary-fixed-dim": "#4cd6ff",
+                        "on-secondary-container": "#00566b",
+                        "on-background": "#e5e2e1",
+                        "inverse-primary": "#c0000a",
+                        "surface-container-high": "#2a2a2a",
+                        "primary": "#ffb4aa",
+                        "on-secondary": "#003543",
+                        "error": "#ffb4ab",
+                        "on-tertiary-container": "#4c3f00",
+                        "on-primary-container": "#5c0002",
+                        "surface-tint": "#ffb4aa",
+                        "tertiary-container": "#c9a900",
+                        "surface-dim": "#131313",
+                        "on-primary-fixed-variant": "#930005",
+                        "on-surface": "#e5e2e1",
+                        "on-error": "#690005",
+                        "on-primary-fixed": "#410001",
+                        "surface-container-lowest": "#0e0e0e",
+                        "inverse-on-surface": "#313030",
+                        "surface-bright": "#393939",
+                        "on-tertiary": "#3a3000",
+                        "tertiary-fixed-dim": "#e9c400",
+                        "surface-variant": "#353535",
+                        "secondary-container": "#14d1ff",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#544600",
+                        "tertiary-fixed": "#ffe16d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "40px",
+                        "block-gap": "32px",
+                        "gutter": "20px",
+                        "margin-mobile": "16px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "display-xl": ["Sora"],
+                        "label-mono": ["JetBrains Mono"],
+                        "headline-lg": ["Sora"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Sora"]
+                    },
+                    "fontSize": {
+                        "display-xl": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                        "label-mono": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Base styles from guidance */
+        body { background-color: #0D0D0D; color: #e5e2e1; }
+        .glass-card {
+            background-color: rgba(26, 26, 26, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.2); /* inner glow */
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+        .raw-border { border: 2px solid #1A1A1A; }
+        .glow-primary { filter: drop-shadow(0 0 15px rgba(255, 180, 170, 0.2)); }
+        .glow-secondary { filter: drop-shadow(0 0 15px rgba(166, 230, 255, 0.2)); }
+        
+        /* Custom scrollbar for data dense areas */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #131313; border-left: 1px solid #1A1A1A; }
+        ::-webkit-scrollbar-thumb { background: #353535; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #5f3f3a; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex selection:bg-primary-container selection:text-on-primary-container">
+<!-- Desktop SideNavBar (Hidden on Mobile) -->
+<nav class="hidden md:flex flex-col py-margin-desktop h-full h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest border-r-2 border-outline-variant z-40">
+<div class="px-margin-desktop mb-block-gap">
+<h1 class="font-display-xl text-headline-lg text-primary-container tracking-tighter uppercase mb-1">KINETIC DEX</h1>
+<p class="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-widest">Elite Runner v4.0</p>
+</div>
+<div class="flex-1 px-4 space-y-2">
+<!-- Nav Items from JSON -->
+<a class="flex items-center space-x-3 px-4 py-3 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">map</span>
+<span class="font-label-mono text-label-mono uppercase tracking-widest">Marathon Map</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded bg-secondary-container text-on-secondary-fixed font-bold border-l-4 border-tertiary transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">explore</span>
+<span class="font-label-mono text-label-mono uppercase tracking-widest">Game Guides</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">find_replace</span>
+<span class="font-label-mono text-label-mono uppercase tracking-widest">Pokedex Tracker</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">account_circle</span>
+<span class="font-label-mono text-label-mono uppercase tracking-widest">Profile</span>
+</a>
+</div>
+<div class="px-4 mt-auto">
+<button class="w-full bg-[#FF1C1C] text-black font-label-mono text-label-mono uppercase tracking-widest py-3 rounded-none hover:outline hover:outline-4 hover:outline-[#00D1FF] hover:-translate-y-1 transition-all">
+                New Milestone
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="w-full md:ml-64 flex-1 flex flex-col min-h-screen relative overflow-x-hidden">
+<!-- TopNavBar (Mobile Only) -->
+<header class="md:hidden flex justify-between items-center h-16 px-margin-mobile w-full sticky top-0 z-50 bg-background/70 backdrop-blur-xl border-b-2 border-outline-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[24px]">explore</span>
+<h1 class="font-display-xl text-headline-lg-mobile uppercase tracking-tighter text-primary-container">Kinetic Dex</h1>
+</div>
+<button class="text-on-surface-variant p-2 hover:bg-surface-container-high transition-colors active:scale-95 duration-100 rounded">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+<!-- Content Area -->
+<div class="p-margin-mobile md:p-margin-desktop space-y-block-gap max-w-[1600px] mx-auto w-full pb-32">
+<!-- Hero Header Section -->
+<section class="relative w-full aspect-[21/9] min-h-[300px] raw-border rounded flex items-end overflow-hidden group">
+<!-- Background Image Placeholder with highly detailed prompt -->
+<div class="absolute inset-0 bg-cover bg-center z-0 transition-transform duration-700 group-hover:scale-105" data-alt="A gritty, high-contrast digital rendering of the original Pokemon Red and Blue box art aesthetic, reimagined for a tactical interface. The scene features jagged, stylized silhouettes of a fiery dragon and a heavily armored turtle emerging from a digital grid. The color palette is restricted to deep blacks, stark whites, and intense bursts of aggressive red and cool cyan. The lighting is harsh and directional, creating deep shadows that emphasize the physical texture of the 'box art'." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA55Lo7tEi1xtD_-Qo0HkWG-eJNf3WuUkTrgp4tj93KAFVhbS2GC1sXnS0reMfzHRVAwdsxkAAIOtqyjot6pNvbWUMmcci1aDXi4lsKtxAfvBy6FtxtJxsb9K2kHEKGKRdHyS7qmsgb5btNbd3MXoAoQSqAn6lnLFnmd-87g2S6K82qpGxfqeCDn_hciL-8q-YDQE_rJNc9Yi_Q-tuWFvpjy4yto5M8MWZnkHpNJmffYZfAFCs9xmrWaQ')">
+</div>
+<!-- Gradient Overlay for text readability -->
+<div class="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] via-[#0D0D0D]/80 to-transparent z-10"></div>
+<div class="relative z-20 w-full p-6 md:p-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="px-2 py-1 bg-surface-container-highest border border-outline-variant font-label-mono text-label-mono text-secondary uppercase tracking-widest rounded-sm">Gen 1</span>
+<span class="px-2 py-1 bg-surface-container-highest border border-outline-variant font-label-mono text-label-mono text-primary uppercase tracking-widest rounded-sm">Speedrun Tier: S</span>
+</div>
+<h2 class="font-display-xl text-headline-lg-mobile md:text-display-xl text-on-surface uppercase tracking-tighter leading-none glow-primary">
+                            Pokemon <br class="hidden md:block"/><span class="text-primary-container">Red / Blue</span>
+</h2>
+</div>
+<button class="bg-[#FF1C1C] text-black font-label-mono text-label-mono uppercase tracking-widest px-6 py-4 rounded-none hover:outline hover:outline-4 hover:outline-[#00D1FF] transition-all whitespace-nowrap self-start md:self-end flex items-center gap-2 active:scale-95">
+<span class="material-symbols-outlined text-[18px]">find_replace</span>
+                        View Red/Blue Pokedex
+                    </button>
+</div>
+</section>
+</div>
+</main>
+</body></html>
