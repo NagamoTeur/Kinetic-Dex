@@ -8,9 +8,15 @@ services:
     container_name: kinetic_dex_app
     expose:
       - "80"
+    networks:
+      - dokploy-network
     restart: always
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/"]
       interval: 15s
       timeout: 5s
       retries: 3
+
+networks:
+  dokploy-network:
+    external: true
