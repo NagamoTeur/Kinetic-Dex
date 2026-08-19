@@ -1,0 +1,14 @@
+services:
+  kinetic-dex:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kinetic_dex_app
+    ports:
+      - "8088:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
