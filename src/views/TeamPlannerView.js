@@ -5,6 +5,7 @@ import { store } from '../store/state.js';
 import { calculateTeamWeaknesses, getPokemonArtworkUrl, KANTO_POKEMON_DATA, fetchPokemonDetails } from '../api/pokeapi.js';
 import { t } from '../i18n/translations.js';
 import { getPokemonName } from '../i18n/pokemonNames.js';
+import { openAuthModal } from '../components/AuthModal.js';
 
 let selectedGameFilter = 'free'; // 'free' | 'gen1' | 'gen2' | 'gen3' | 'gen4' | 'gen5' | 'gen6' | 'gen7' | 'gen8'
 
@@ -270,7 +271,11 @@ export function renderTeamPlannerView(container) {
   // Attach add slot modal picker events
   container.querySelectorAll('.add-slot-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      openPickerModal(lang);
+      if (!store.state.currentUser) {
+        openAuthModal('login');
+      } else {
+        openPickerModal(lang);
+      }
     });
   });
 }
@@ -338,9 +343,12 @@ function openPickerModal(lang) {
       item.addEventListener('click', async () => {
         const id = item.getAttribute('data-id');
         const details = await fetchPokemonDetails(id);
-        store.addTeamMember(details);
+        const success = store.addTeamMember(details);
         modal.classList.add('hidden');
         modal.classList.remove('flex');
+        if (!success) {
+          openAuthModal('login');
+        }
       });
     });
   }

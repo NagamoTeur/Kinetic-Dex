@@ -5,6 +5,7 @@ import { store } from '../store/state.js';
 import { KANTO_REGIONAL_LOCATIONS, getPokemonArtworkUrl } from '../api/pokeapi.js';
 import { t } from '../i18n/translations.js';
 import { getPokemonName } from '../i18n/pokemonNames.js';
+import { openAuthModal } from '../components/AuthModal.js';
 
 let activeLocationFilter = 'all';
 
@@ -179,8 +180,12 @@ export function renderRegionalTrackerView(container) {
   container.querySelectorAll('.reg-caught-toggle').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-id');
-      store.toggleCaught(id);
-      renderRegionalTrackerView(container);
+      const success = store.toggleCaught(id);
+      if (!success) {
+        openAuthModal('login');
+      } else {
+        renderRegionalTrackerView(container);
+      }
     });
   });
 }

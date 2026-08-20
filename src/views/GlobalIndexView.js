@@ -5,6 +5,7 @@ import { store } from '../store/state.js';
 import { KANTO_POKEMON_DATA, getPokemonArtworkUrl, fetchPokemonDetails } from '../api/pokeapi.js';
 import { t } from '../i18n/translations.js';
 import { getPokemonName } from '../i18n/pokemonNames.js';
+import { openAuthModal } from '../components/AuthModal.js';
 
 let searchQuery = '';
 let selectedGen = 'all';
@@ -167,7 +168,10 @@ export function renderGlobalIndexView(container) {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const id = btn.getAttribute('data-id');
-      store.toggleCaught(id);
+      const success = store.toggleCaught(id);
+      if (!success) {
+        openAuthModal('login');
+      }
     });
   });
 
@@ -277,8 +281,11 @@ async function openPokemonModal(id, lang) {
   });
 
   document.getElementById('add-to-team-btn')?.addEventListener('click', () => {
-    store.addTeamMember(pokemon);
+    const success = store.addTeamMember(pokemon);
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+    if (!success) {
+      openAuthModal('login');
+    }
   });
 }

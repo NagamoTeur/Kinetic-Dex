@@ -156,7 +156,7 @@ export function renderDashboardView(container) {
 
           <!-- Team 6 Card Grid -->
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            ${state.team.map((member, i) => {
+            ${state.team && state.team.length > 0 ? state.team.map((member, i) => {
               const displayName = getPokemonName(member, lang);
               return `
                 <div class="bg-[#2a2a2a] p-4 rounded-xl border border-white/10 hover:border-[#00f2ff]/50 transition-all flex flex-col items-center text-center space-y-2 group relative">
@@ -174,7 +174,20 @@ export function renderDashboardView(container) {
                   </div>
                 </div>
               `;
-            }).join('')}
+            }).join('') : `
+              <div class="col-span-2 sm:col-span-3 bg-[#131313] p-8 rounded-xl border border-dashed border-white/10 text-center space-y-3">
+                <span class="material-symbols-outlined text-gray-500 text-3xl">sports_esports</span>
+                <p class="text-xs font-mono text-gray-400">
+                  ${lang === 'fr' 
+                    ? 'Aucun Pokémon dans l\'équipe active. Connectez-vous ou créez une équipe personnalisée.' 
+                    : 'No active team members. Sign in or assemble your custom team.'}
+                </p>
+                <a href="#team-planner" class="inline-flex items-center gap-1.5 px-4 py-2 bg-[#ff1c1c] hover:bg-[#ff5545] text-white font-sora font-bold text-xs rounded-lg glow-red transition-all">
+                  <span class="material-symbols-outlined text-sm">add_circle</span>
+                  ${lang === 'fr' ? 'CONFIGURER L\'ÉQUIPE' : 'CONFIGURE TEAM'}
+                </a>
+              </div>
+            `}
           </div>
         </div>
 

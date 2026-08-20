@@ -3,6 +3,7 @@
  */
 import { store } from '../store/state.js';
 import { t } from '../i18n/translations.js';
+import { openAuthModal } from '../components/AuthModal.js';
 
 const KANTO_CHECKPOINTS = [
   { id: 'kanto_chk_1', badge: 'Boulder Badge', leader: 'Brock (Pewter City)', levelCap: 14, icon: 'shield', keyItems: ['HM05 Flash'], splitTime: '00:25:00' },
@@ -161,7 +162,10 @@ export function renderMarathonRoutingView(container) {
   container.querySelectorAll('.chk-toggle-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-id');
-      store.toggleCheckpoint(id);
+      const success = store.toggleCheckpoint(id);
+      if (!success) {
+        openAuthModal('login');
+      }
     });
   });
 }

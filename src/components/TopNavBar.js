@@ -39,7 +39,7 @@ export function renderTopNavBar() {
               <h1 class="font-sora font-extrabold text-lg tracking-wider text-white">${t('brandTitle', lang)}<span class="text-[#ff5545]">${t('brandSubtitle', lang)}</span></h1>
               <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-cyan-400 border border-cyan-500/30">v4.0</span>
             </div>
-            <p class="text-xs text-gray-400 font-mono">${t('sessionLabel', lang)} <span class="text-white">${profile.sessionName}</span></p>
+            <p class="text-xs text-gray-400 font-mono">${t('sessionLabel', lang)} <span class="text-white">${profile ? profile.sessionName : (lang === 'fr' ? 'Invite Déconnecté' : 'Guest Offline')}</span></p>
           </div>
         </a>
 

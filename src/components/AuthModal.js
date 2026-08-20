@@ -5,6 +5,7 @@ import { store } from '../store/state.js';
 import { t } from '../i18n/translations.js';
 
 let activeAuthMode = 'login'; // 'login' | 'register'
+let customPromptMsg = null;
 
 export function renderAuthModal() {
   let modalContainer = document.getElementById('auth-modal-wrapper');
@@ -19,7 +20,7 @@ export function renderAuthModal() {
 
   modalContainer.innerHTML = `
     <div id="auth-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 select-none hidden">
-      <div class="bg-[#1c1b1b] border border-white/20 rounded-2xl max-w-md w-full p-8 space-y-6 relative glow-red">
+      <div id="auth-modal-card" class="bg-[#1c1b1b] border border-white/20 rounded-2xl max-w-md w-full p-8 space-y-6 relative glow-red animate-scaleIn">
         
         <button id="close-auth-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white">
           <span class="material-symbols-outlined text-2xl">close</span>
@@ -37,9 +38,9 @@ export function renderAuthModal() {
               : (lang === 'fr' ? 'CRÉER UN COMPTE' : 'CREATE RUNNER ACCOUNT')}
           </h3>
           <p class="text-xs font-mono text-gray-400">
-            ${activeAuthMode === 'login'
+            ${customPromptMsg ? customPromptMsg : (activeAuthMode === 'login'
               ? (lang === 'fr' ? 'Connectez-vous pour synchroniser votre marathon' : 'Sign in to access your marathon progress')
-              : (lang === 'fr' ? 'Rejoignez la plateforme de commandement Kinetic Dex' : 'Join the Kinetic Dex command platform')}
+              : (lang === 'fr' ? 'Rejoignez la plateforme de commandement Kinetic Dex' : 'Join the Kinetic Dex command platform'))}
           </p>
         </div>
 
@@ -52,7 +53,7 @@ export function renderAuthModal() {
             <label class="text-xs font-mono font-bold text-gray-300 block uppercase">
               ${lang === 'fr' ? 'NOM DE RUNNER' : 'RUNNER USERNAME'}
             </label>
-            <input type="text" id="auth-username" required placeholder="ex: RedMaster_99"
+            <input type="text" id="auth-username" required placeholder="ex: RedMaster_99" autofocus
                    class="w-full bg-[#131313] border border-white/10 focus:border-[#00f2ff] rounded-xl px-4 py-2.5 text-sm font-mono text-white outline-none" />
           </div>
 
@@ -108,18 +109,27 @@ export function renderAuthModal() {
 
   // Attach event handlers
   const modal = document.getElementById('auth-modal');
+  const modalBox = document.getElementById('auth-modal-card');
   const closeBtn = document.getElementById('close-auth-modal');
   const toggleBtn = document.getElementById('toggle-auth-mode-btn');
   const authForm = document.getElementById('auth-form');
 
   closeBtn?.addEventListener('click', () => {
     modal?.classList.add('hidden');
+    customPromptMsg = null;
+  });
+
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.add('hidden');
+      customPromptMsg = null;
+    }
   });
 
   toggleBtn?.addEventListener('click', () => {
     activeAuthMode = activeAuthMode === 'login' ? 'register' : 'login';
     renderAuthModal();
-    openAuthModal();
+    openAuthModal(activeAuthMode);
   });
 
   authForm?.addEventListener('submit', (e) => {
@@ -132,6 +142,7 @@ export function renderAuthModal() {
       const res = store.login(username, password);
       if (res.success) {
         modal?.classList.add('hidden');
+        customPromptMsg = null;
       } else {
         errorMsg.textContent = lang === 'fr' ? res.messageFR : res.messageEN;
         errorMsg.classList.remove('hidden');
@@ -142,6 +153,7 @@ export function renderAuthModal() {
       const res = store.register(username, email, password, title);
       if (res.success) {
         modal?.classList.add('hidden');
+        customPromptMsg = null;
       } else {
         errorMsg.textContent = lang === 'fr' ? res.messageFR : res.messageEN;
         errorMsg.classList.remove('hidden');
@@ -150,9 +162,13 @@ export function renderAuthModal() {
   });
 }
 
-export function openAuthModal(mode = 'login') {
+export function openAuthModal(mode = 'login', promptMessage = null) {
   activeAuthMode = mode;
+  customPromptMsg = promptMessage;
   renderAuthModal();
   const modal = document.getElementById('auth-modal');
   modal?.classList.remove('hidden');
+  setTimeout(() => {
+    document.getElementById('auth-username')?.focus();
+  }, 50);
 }
