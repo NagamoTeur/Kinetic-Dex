@@ -2,12 +2,12 @@
  * Kinetic Dex - Strategic Team Planner View (with Game Selection & Mode Libre)
  */
 import { store } from '../store/state.js';
-import { calculateTeamWeaknesses, getPokemonArtworkUrl, KANTO_POKEMON_DATA, fetchPokemonDetails } from '../api/pokeapi.js';
+import { calculateTeamWeaknesses, getPokemonArtworkUrl, KANTO_POKEMON_DATA, fetchPokemonDetails, fetchAllPokemonCatalog } from '../api/pokeapi.js';
 import { t } from '../i18n/translations.js';
 import { getPokemonName } from '../i18n/pokemonNames.js';
 import { openAuthModal } from '../components/AuthModal.js';
 
-let selectedGameFilter = 'free'; // 'free' | 'gen1' | 'gen2' | 'gen3' | 'gen4' | 'gen5' | 'gen6' | 'gen7' | 'gen8'
+let selectedGameFilter = 'free'; // 'free' | 'forms' | 'gen1' | 'gen2' | 'gen3' | 'gen4' | 'gen5' | 'gen6' | 'gen7' | 'gen8' | 'gen9'
 
 export function renderTeamPlannerView(container) {
   const lang = store.state.lang;
@@ -32,15 +32,17 @@ export function renderTeamPlannerView(container) {
   const specPercent = 100 - physPercent;
 
   const gameOptions = [
-    { id: 'free', labelFR: '🌐 Mode Libre (Tous les 1025 Pokémon)', labelEN: '🌐 Free Mode (All 1025 Pokémon)' },
-    { id: 'gen1', labelFR: '🎮 Gen 1: Rouge / Bleu (Kanto 1-151)', labelEN: '🎮 Gen 1: Red / Blue (Kanto 1-151)' },
-    { id: 'gen2', labelFR: '🎮 Gen 2: Or / Argent (Johto 152-251)', labelEN: '🎮 Gen 2: Gold / Silver (Johto 152-251)' },
-    { id: 'gen3', labelFR: '🎮 Gen 3: Rubis / Saphir (Hoenn 252-386)', labelEN: '🎮 Gen 3: Ruby / Sapphire (Hoenn 252-386)' },
-    { id: 'gen4', labelFR: '🎮 Gen 4: Diamant / Perle (Sinnoh 387-493)', labelEN: '🎮 Gen 4: Diamond / Pearl (Sinnoh 387-493)' },
+    { id: 'free', labelFR: '🌐 Mode Libre (Tous les 1025 Pokémon + Formes)', labelEN: '🌐 Free Mode (All 1025 Pokémon + Forms)' },
+    { id: 'forms', labelFR: '✨ Formes Alternatives (Méga, Alola, Galar, Hisui, Paldea, Gigamax...)', labelEN: '✨ Alternate Forms (Mega, Alola, Galar, Hisui, Paldea, Gmax...)' },
+    { id: 'gen1', labelFR: '🎮 Gen 1: Rouge / Bleu / Jaune (Kanto 1-151)', labelEN: '🎮 Gen 1: Red / Blue / Yellow (Kanto 1-151)' },
+    { id: 'gen2', labelFR: '🎮 Gen 2: Or / Argent / Cristal (Johto 152-251)', labelEN: '🎮 Gen 2: Gold / Silver / Crystal (Johto 152-251)' },
+    { id: 'gen3', labelFR: '🎮 Gen 3: Rubis / Saphir / Émeraude (Hoenn 252-386)', labelEN: '🎮 Gen 3: Ruby / Sapphire / Emerald (Hoenn 252-386)' },
+    { id: 'gen4', labelFR: '🎮 Gen 4: Diamant / Perle / Platine (Sinnoh 387-493)', labelEN: '🎮 Gen 4: Diamond / Pearl / Platinum (Sinnoh 387-493)' },
     { id: 'gen5', labelFR: '🎮 Gen 5: Noir / Blanc (Unys 494-649)', labelEN: '🎮 Gen 5: Black / White (Unova 494-649)' },
     { id: 'gen6', labelFR: '🎮 Gen 6: X / Y (Kalos 650-721)', labelEN: '🎮 Gen 6: X / Y (Kalos 650-721)' },
     { id: 'gen7', labelFR: '🎮 Gen 7: Soleil / Lune (Alola 722-809)', labelEN: '🎮 Gen 7: Sun / Moon (Alola 722-809)' },
-    { id: 'gen8', labelFR: '🎮 Gen 8: Épée / Bouclier (Galar 810-905)', labelEN: '🎮 Gen 8: Sword / Shield (Galar 810-905)' }
+    { id: 'gen8', labelFR: '🎮 Gen 8: Épée / Bouclier (Galar 810-905)', labelEN: '🎮 Gen 8: Sword / Shield (Galar 810-905)' },
+    { id: 'gen9', labelFR: '🎮 Gen 9: Écarlate / Violet (Paldea 906-1025)', labelEN: '🎮 Gen 9: Scarlet / Violet (Paldea 906-1025)' }
   ];
 
   container.innerHTML = `
@@ -280,7 +282,7 @@ export function renderTeamPlannerView(container) {
   });
 }
 
-function openPickerModal(lang) {
+async function openPickerModal(lang) {
   const modal = document.getElementById('picker-modal');
   const pickerList = document.getElementById('picker-list');
   const searchInput = document.getElementById('picker-search-input');
@@ -289,8 +291,18 @@ function openPickerModal(lang) {
   modal.classList.remove('hidden');
   modal.classList.add('flex');
 
+  pickerList.innerHTML = `
+    <div class="p-8 text-center text-gray-400 font-mono space-y-2">
+      <div class="inline-block w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+      <div>${lang === 'fr' ? 'Chargement du Pokédex Global (1025+ Formes)...' : 'Loading Global Pokédex (1025+ Forms)...'}</div>
+    </div>
+  `;
+
+  const fullCatalog = await fetchAllPokemonCatalog();
+
   const genRanges = {
-    free: [1, 1025],
+    free: [1, 99999],
+    forms: [10001, 99999],
     gen1: [1, 151],
     gen2: [152, 251],
     gen3: [252, 386],
@@ -298,43 +310,56 @@ function openPickerModal(lang) {
     gen5: [494, 649],
     gen6: [650, 721],
     gen7: [722, 809],
-    gen8: [810, 905]
+    gen8: [810, 905],
+    gen9: [906, 1025]
   };
 
-  const [minId, maxId] = genRanges[selectedGameFilter] || [1, 1025];
+  const [minId, maxId] = genRanges[selectedGameFilter] || [1, 99999];
 
   function renderList(query = '') {
-    let items = KANTO_POKEMON_DATA.filter(p => p.id >= minId && p.id <= maxId);
+    let items = fullCatalog;
     
-    // If Mode Libre and items empty in fallback, generate placeholders up to range
-    if (items.length === 0 && selectedGameFilter === 'free') {
-      items = KANTO_POKEMON_DATA;
+    if (selectedGameFilter === 'forms') {
+      items = items.filter(p => p.isForm || p.id >= 10000 || (p.rawName && p.rawName.includes('-')));
+    } else if (selectedGameFilter !== 'free') {
+      items = items.filter(p => (p.id >= minId && p.id <= maxId) || (p.gen && p.gen.toString() === selectedGameFilter.replace('gen', '')));
     }
 
     if (query.trim()) {
       const q = query.toLowerCase().trim();
       items = items.filter(p => {
-        const displayName = getPokemonName(p, lang).toLowerCase();
-        return displayName.includes(q) || p.name.toLowerCase().includes(q) || p.id.toString() === q;
+        const displayName = (p.nameFr || getPokemonName(p, lang)).toLowerCase();
+        const engName = (p.name || '').toLowerCase();
+        const rawName = (p.rawName || '').toLowerCase();
+        return displayName.includes(q) || engName.includes(q) || rawName.includes(q) || p.id.toString() === q;
       });
     }
 
-    pickerList.innerHTML = items.map(p => {
-      const displayName = getPokemonName(p, lang);
+    if (items.length === 0) {
+      pickerList.innerHTML = `
+        <div class="p-6 text-center text-xs font-mono text-gray-500">
+          ${lang === 'fr' ? 'Aucun Pokémon trouvé.' : 'No Pokémon found.'}
+        </div>
+      `;
+      return;
+    }
+
+    pickerList.innerHTML = items.slice(0, 150).map(p => {
+      const displayName = p.nameFr || getPokemonName(p, lang);
+      const isForm = p.id >= 10000 || p.isForm;
       return `
-        <div class="picker-item flex items-center justify-between p-2.5 bg-[#2a2a2a] hover:bg-white/10 rounded-xl cursor-pointer transition-colors" data-id="${p.id}">
+        <div class="picker-item flex items-center justify-between p-2.5 bg-[#2a2a2a] hover:bg-white/10 rounded-xl cursor-pointer transition-colors" data-id="${p.id}" data-name="${p.rawName || p.name}">
           <div class="flex items-center gap-3">
-            <img src="${getPokemonArtworkUrl(p.id)}" alt="${displayName}" class="w-10 h-10 object-contain" />
+            <img src="${p.artwork || getPokemonArtworkUrl(p.id)}" alt="${displayName}" loading="lazy" class="w-10 h-10 object-contain" />
             <div>
-              <div class="font-sora font-bold text-sm text-white">${displayName}</div>
+              <div class="font-sora font-bold text-sm text-white flex items-center gap-1.5">
+                <span>${displayName}</span>
+                ${isForm ? '<span class="text-[8px] font-mono px-1 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/30">FORM</span>' : ''}
+              </div>
               <div class="text-[10px] font-mono text-gray-400">#${p.id.toString().padStart(3, '0')}</div>
             </div>
           </div>
-          <div class="flex gap-1">
-            ${p.types.map(t => `
-              <span class="text-[9px] font-mono px-1.5 py-0.5 rounded font-bold uppercase type-${t}">${t}</span>
-            `).join('')}
-          </div>
+          <span class="material-symbols-outlined text-[#ff1c1c] text-lg hover:scale-125 transition-transform">add_circle</span>
         </div>
       `;
     }).join('');
@@ -342,7 +367,8 @@ function openPickerModal(lang) {
     pickerList.querySelectorAll('.picker-item').forEach(item => {
       item.addEventListener('click', async () => {
         const id = item.getAttribute('data-id');
-        const details = await fetchPokemonDetails(id);
+        const rawName = item.getAttribute('data-name');
+        const details = await fetchPokemonDetails(rawName || id);
         const success = store.addTeamMember(details);
         modal.classList.add('hidden');
         modal.classList.remove('flex');

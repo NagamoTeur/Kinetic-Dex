@@ -1,8 +1,8 @@
 /**
- * Kinetic Dex - Global Pokedex Index View (Generations 1 to 9 with French Names & i18n)
+ * Kinetic Dex - Global Pokedex Index View (Generations 1 to 9 + Alternate Forms)
  */
 import { store } from '../store/state.js';
-import { KANTO_POKEMON_DATA, getPokemonArtworkUrl, fetchPokemonDetails } from '../api/pokeapi.js';
+import { KANTO_POKEMON_DATA, getPokemonArtworkUrl, fetchPokemonDetails, fetchAllPokemonCatalog } from '../api/pokeapi.js';
 import { t } from '../i18n/translations.js';
 import { getPokemonName } from '../i18n/pokemonNames.js';
 import { openAuthModal } from '../components/AuthModal.js';
@@ -10,27 +10,35 @@ import { openAuthModal } from '../components/AuthModal.js';
 let searchQuery = '';
 let selectedGen = 'all';
 let selectedType = 'all';
+let fullCatalogCache = null;
 
-export function renderGlobalIndexView(container) {
+export async function renderGlobalIndexView(container) {
   const state = store.state;
   const lang = state.lang;
 
-  let items = [...KANTO_POKEMON_DATA];
+  if (!fullCatalogCache) {
+    fullCatalogCache = await fetchAllPokemonCatalog();
+  }
 
-  if (selectedGen !== 'all') {
+  let items = fullCatalogCache && fullCatalogCache.length > 0 ? fullCatalogCache : [...KANTO_POKEMON_DATA];
+
+  if (selectedGen === 'forms') {
+    items = items.filter(p => p.isForm || p.id >= 10000 || (p.rawName && p.rawName.includes('-')));
+  } else if (selectedGen !== 'all') {
     items = items.filter(p => p.gen === Number(selectedGen));
   }
 
   if (selectedType !== 'all') {
-    items = items.filter(p => p.types.includes(selectedType.toLowerCase()));
+    items = items.filter(p => p.types && p.types.includes(selectedType.toLowerCase()));
   }
 
   if (searchQuery.trim()) {
     const q = searchQuery.toLowerCase().trim();
     items = items.filter(p => {
-      const name = getPokemonName(p, lang).toLowerCase();
-      const engName = p.name.toLowerCase();
-      return name.includes(q) || engName.includes(q) || p.id.toString() === q || p.types.some(type => type.toLowerCase().includes(q));
+      const name = (p.nameFr || getPokemonName(p, lang)).toLowerCase();
+      const engName = (p.name || '').toLowerCase();
+      const rawName = (p.rawName || '').toLowerCase();
+      return name.includes(q) || engName.includes(q) || rawName.includes(q) || p.id.toString() === q;
     });
   }
 
@@ -42,6 +50,7 @@ export function renderGlobalIndexView(container) {
 
   const genTabs = [
     { id: 'all', label: t('allGens', lang) },
+    { id: 'forms', label: '✨ ' + (lang === 'fr' ? 'FORMES ALTERNATIVES' : 'ALTERNATE FORMS') },
     { id: '1', label: 'GEN 1 (KANTO)' },
     { id: '2', label: 'GEN 2 (JOHTO)' },
     { id: '3', label: 'GEN 3 (HOENN)' },
@@ -92,15 +101,19 @@ export function renderGlobalIndexView(container) {
 
       <!-- Pokedex Cards Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5">
-        ${items.map(p => {
+        ${items.slice(0, 150).map(p => {
           const isCaught = store.isCaught(p.id);
-          const displayName = getPokemonName(p, lang);
+          const displayName = p.nameFr || getPokemonName(p, lang);
+          const isForm = p.id >= 10000 || p.isForm;
           return `
-            <div class="poke-card group bg-[#1c1b1b] p-4 rounded-xl border ${isCaught ? 'border-emerald-500/60 bg-emerald-950/20' : 'border-white/10 hover:border-[#ff5545]/50'} transition-all cursor-pointer flex flex-col justify-between" data-id="${p.id}">
+            <div class="poke-card group bg-[#1c1b1b] p-4 rounded-xl border ${isCaught ? 'border-emerald-500/60 bg-emerald-950/20' : 'border-white/10 hover:border-[#ff5545]/50'} transition-all cursor-pointer flex flex-col justify-between" data-id="${p.id}" data-name="${p.rawName || p.name}">
               
               <!-- Top Row: ID & Caught Checkbox -->
               <div class="flex items-center justify-between">
-                <span class="text-xs font-mono text-gray-400 font-bold">#${p.id.toString().padStart(3, '0')}</span>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs font-mono text-gray-400 font-bold">#${p.id.toString().padStart(3, '0')}</span>
+                  ${isForm ? '<span class="text-[8px] font-mono px-1 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/30">FORM</span>' : ''}
+                </div>
                 <button class="caught-toggle-btn w-6 h-6 rounded flex items-center justify-center border transition-all ${isCaught ? 'bg-emerald-500 border-emerald-400 text-black' : 'border-gray-600 text-transparent hover:border-gray-400'}" data-id="${p.id}">
                   <span class="material-symbols-outlined text-sm font-bold">check</span>
                 </button>
@@ -108,14 +121,14 @@ export function renderGlobalIndexView(container) {
 
               <!-- Center Artwork -->
               <div class="py-4 flex justify-center">
-                <img src="${getPokemonArtworkUrl(p.id)}" alt="${displayName}" loading="lazy" class="w-24 h-24 object-contain group-hover:scale-110 transition-transform duration-200" />
+                <img src="${p.artwork || getPokemonArtworkUrl(p.id)}" alt="${displayName}" loading="lazy" class="w-24 h-24 object-contain group-hover:scale-110 transition-transform duration-200" />
               </div>
 
               <!-- Bottom Info -->
               <div class="space-y-2 text-center">
                 <h3 class="font-sora font-bold text-sm text-white group-hover:text-[#00f2ff] transition-colors">${displayName}</h3>
                 <div class="flex justify-center gap-1">
-                  ${p.types.map(t => `
+                  ${(p.types || ['normal']).map(t => `
                     <span class="text-[9px] font-mono px-1.5 py-0.5 rounded font-bold uppercase type-${t}">${t}</span>
                   `).join('')}
                 </div>
@@ -178,8 +191,9 @@ export function renderGlobalIndexView(container) {
   container.querySelectorAll('.poke-card').forEach(card => {
     card.addEventListener('click', async (e) => {
       if (e.target.closest('.caught-toggle-btn')) return;
+      const rawName = card.getAttribute('data-name');
       const id = card.getAttribute('data-id');
-      await openPokemonModal(id, lang);
+      await openPokemonModal(rawName || id, lang);
     });
   });
 }

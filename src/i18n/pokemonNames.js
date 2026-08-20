@@ -36,18 +36,114 @@ export const POKEMON_NAMES_FR = {
   151: "Mew"
 };
 
+// Form suffix mappings for French & English
+const FORM_MAP_FR = {
+  'mega': 'Méga',
+  'mega-x': 'Méga X',
+  'mega-y': 'Méga Y',
+  'alola': 'Alola',
+  'galar': 'Galar',
+  'hisui': 'Hisui',
+  'paldea': 'Paldea',
+  'gmax': 'Gigamax',
+  'primal': 'Primo',
+  'origin': 'Origine',
+  'therian': 'Totémique',
+  'incarnate': 'Avatar',
+  'black': 'Noir',
+  'white': 'Blanc',
+  'dusk': 'Crépuscule',
+  'dawn': 'Aurore',
+  'ultra': 'Ultra',
+  'crowned': 'Suprême',
+  'hero': 'Héros',
+  'rapid-strike': 'Mille Poings',
+  'single-strike': 'Poing Final',
+  'ice': 'Cavalier du Froid',
+  'shadow': 'Cavalier d\'Effroi',
+  'bloodmoon': 'Lune Vermeille',
+  'wellspring-mask': 'Masque du Puits',
+  'hearthflame-mask': 'Masque du Fourneau',
+  'cornerstone-mask': 'Masque de la Pierre',
+  'terastal': 'Téracristal',
+  'stellar': 'Stellaire',
+  'roaming': 'Marche',
+  'dusk-mane': 'Crinière du Couchant',
+  'dawn-wings': 'Ailes de l\'Aurore'
+};
+
+const FORM_MAP_EN = {
+  'mega': 'Mega',
+  'mega-x': 'Mega X',
+  'mega-y': 'Mega Y',
+  'alola': 'Alola',
+  'galar': 'Galar',
+  'hisui': 'Hisui',
+  'paldea': 'Paldea',
+  'gmax': 'Gigantamax',
+  'primal': 'Primal',
+  'origin': 'Origin',
+  'therian': 'Therian',
+  'incarnate': 'Incarnate',
+  'black': 'Black',
+  'white': 'White',
+  'dusk': 'Dusk',
+  'dawn': 'Dawn',
+  'ultra': 'Ultra',
+  'crowned': 'Crowned',
+  'hero': 'Hero',
+  'rapid-strike': 'Rapid Strike',
+  'single-strike': 'Single Strike',
+  'ice': 'Ice Rider',
+  'shadow': 'Shadow Rider',
+  'bloodmoon': 'Bloodmoon',
+  'wellspring-mask': 'Wellspring Mask',
+  'hearthflame-mask': 'Hearthflame Mask',
+  'cornerstone-mask': 'Cornerstone Mask',
+  'terastal': 'Terastal',
+  'stellar': 'Stellar',
+  'roaming': 'Roaming'
+};
+
+export function formatPokemonNameWithForm(rawApiName, baseId, lang = 'fr') {
+  if (!rawApiName) return '';
+  const cleanName = rawApiName.toLowerCase();
+  const parts = cleanName.split('-');
+  const baseName = parts[0];
+  const formSuffix = parts.slice(1).join('-');
+
+  let baseDisplayName = baseName.charAt(0).toUpperCase() + baseName.slice(1);
+  if (lang === 'fr' && POKEMON_NAMES_FR[baseId]) {
+    baseDisplayName = POKEMON_NAMES_FR[baseId];
+  }
+
+  if (!formSuffix) return baseDisplayName;
+
+  const formDict = lang === 'fr' ? FORM_MAP_FR : FORM_MAP_EN;
+  const matchedForm = formDict[formSuffix] || formSuffix.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+  return `${baseDisplayName} (${matchedForm})`;
+}
+
 export function getPokemonName(pokemonOrId, lang = 'fr') {
   if (!pokemonOrId) return '';
-  const id = typeof pokemonOrId === 'object' ? pokemonOrId.id : Number(pokemonOrId);
-  const englishName = typeof pokemonOrId === 'object' ? pokemonOrId.name : `Pokémon #${id}`;
-
-  if (lang === 'fr') {
-    if (POKEMON_NAMES_FR[id]) {
-      return POKEMON_NAMES_FR[id];
-    }
-    if (typeof pokemonOrId === 'object' && pokemonOrId.nameFr) {
-      return pokemonOrId.nameFr;
+  
+  if (typeof pokemonOrId === 'object') {
+    if (pokemonOrId.nameFr && lang === 'fr') return pokemonOrId.nameFr;
+    if (pokemonOrId.name) {
+      if (pokemonOrId.name.includes('-')) {
+        return formatPokemonNameWithForm(pokemonOrId.name, pokemonOrId.id, lang);
+      }
+      if (lang === 'fr' && POKEMON_NAMES_FR[pokemonOrId.id]) {
+        return POKEMON_NAMES_FR[pokemonOrId.id];
+      }
+      return pokemonOrId.name;
     }
   }
-  return englishName;
+
+  const id = Number(pokemonOrId);
+  if (lang === 'fr' && POKEMON_NAMES_FR[id]) {
+    return POKEMON_NAMES_FR[id];
+  }
+  return `Pokémon #${id}`;
 }

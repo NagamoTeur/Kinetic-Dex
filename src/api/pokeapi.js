@@ -1,10 +1,88 @@
 /**
- * Kinetic Dex - PokéAPI Integration & Fallback Catalog Provider (with French Names)
+ * Kinetic Dex - PokéAPI Integration & Global Multi-Gen Catalog Provider (Gen 1-9 + Alternate Forms)
  */
-import { POKEMON_NAMES_FR } from '../i18n/pokemonNames.js';
+import { POKEMON_NAMES_FR, formatPokemonNameWithForm } from '../i18n/pokemonNames.js';
 
 const POKEAPI_BASE = 'https://pokeapi.co/api/v2';
 const cache = new Map();
+let globalCatalogPromise = null;
+
+// Helper to determine generation from Pokemon ID or name
+export function getGenFromId(id, name = '') {
+  const num = Number(id);
+  if (num >= 1 && num <= 151) return 1;
+  if (num >= 152 && num <= 251) return 2;
+  if (num >= 252 && num <= 386) return 3;
+  if (num >= 387 && num <= 493) return 4;
+  if (num >= 494 && num <= 649) return 5;
+  if (num >= 650 && num <= 721) return 6;
+  if (num >= 722 && num <= 809) return 7;
+  if (num >= 810 && num <= 905) return 8;
+  if (num >= 906 && num <= 1025) return 9;
+
+  // Alternate forms (ID >= 10001)
+  const n = (name || '').toLowerCase();
+  if (n.includes('alola')) return 7;
+  if (n.includes('galar') || n.includes('gmax')) return 8;
+  if (n.includes('hisui')) return 8;
+  if (n.includes('paldea')) return 9;
+  if (n.includes('mega') || n.includes('primal')) return 6;
+  return 'forms';
+}
+
+// Global Catalog Fetcher: loads all 1025 Pokémon + all Alternate Forms
+export async function fetchAllPokemonCatalog() {
+  if (globalCatalogPromise) return globalCatalogPromise;
+
+  globalCatalogPromise = (async () => {
+    const cachedStr = localStorage.getItem('kinetic_dex_full_catalog_v2');
+    if (cachedStr) {
+      try {
+        const parsed = JSON.parse(cachedStr);
+        if (Array.isArray(parsed) && parsed.length > 500) {
+          return parsed;
+        }
+      } catch (e) {}
+    }
+
+    try {
+      const res = await fetch(`${POKEAPI_BASE}/pokemon?limit=1500`);
+      if (!res.ok) throw new Error('Catalog fetch failed');
+      const data = await res.json();
+
+      const mapped = data.results.map(item => {
+        const segments = item.url.split('/').filter(Boolean);
+        const id = Number(segments[segments.length - 1]);
+        const rawName = item.name;
+        const gen = getGenFromId(id, rawName);
+        const isForm = id >= 10000 || rawName.includes('-');
+
+        return {
+          id,
+          name: rawName.charAt(0).toUpperCase() + rawName.slice(1),
+          rawName,
+          nameFr: formatPokemonNameWithForm(rawName, id > 10000 ? (rawName.split('-')[0]) : id, 'fr'),
+          gen,
+          isForm,
+          types: ['normal'], // will be enriched on detail view
+          artwork: getPokemonArtworkUrl(id),
+          sprite: getPokemonSpriteUrl(id)
+        };
+      });
+
+      try {
+        localStorage.setItem('kinetic_dex_full_catalog_v2', JSON.stringify(mapped));
+      } catch (e) {}
+
+      return mapped;
+    } catch (err) {
+      console.warn('Using offline fallback catalog', err);
+      return KANTO_POKEMON_DATA;
+    }
+  })();
+
+  return globalCatalogPromise;
+}
 
 // Local pre-populated Fallback Catalog with French and English names
 export const KANTO_POKEMON_DATA = [
