@@ -1,11 +1,9 @@
-/**
- * Kinetic Dex - Regional Pokedex Tracker View (with French Pokemon Names & i18n)
- */
 import { store } from '../store/state.js';
 import { KANTO_REGIONAL_LOCATIONS, getPokemonArtworkUrl } from '../api/pokeapi.js';
 import { t } from '../i18n/translations.js';
 import { getPokemonName } from '../i18n/pokemonNames.js';
 import { openAuthModal } from '../components/AuthModal.js';
+import { renderPokeballSvg } from '../components/PokeballIcon.js';
 
 let activeLocationFilter = 'all';
 
@@ -99,10 +97,10 @@ export function renderRegionalTrackerView(container) {
                     return `
                       <tr class="hover:bg-white/5 transition-colors ${isCaught ? 'bg-emerald-950/10' : ''}">
                         
-                        <!-- Caught Checkbox -->
+                        <!-- Caught Pokéball Button -->
                         <td class="py-3 pr-4">
-                          <button class="reg-caught-toggle w-6 h-6 rounded flex items-center justify-center border transition-all ${isCaught ? 'bg-emerald-500 border-emerald-400 text-black' : 'border-gray-600 text-transparent hover:border-gray-400'}" data-id="${enc.id}">
-                            <span class="material-symbols-outlined text-sm font-bold">check</span>
+                          <button class="reg-caught-toggle p-1 rounded-full flex items-center justify-center transition-all cursor-pointer ${isCaught ? 'bg-red-950/40 border border-red-500/50' : 'hover:bg-white/5'}" data-id="${enc.id}" title="${isCaught ? (lang === 'fr' ? 'Capturé !' : 'Caught!') : (lang === 'fr' ? 'Marquer comme capturé' : 'Mark as caught')}">
+                            ${renderPokeballSvg(isCaught, 22)}
                           </button>
                         </td>
 

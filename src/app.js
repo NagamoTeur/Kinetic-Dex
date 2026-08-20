@@ -29,22 +29,21 @@ function getActiveTabFromHash() {
   return routes[hash] ? hash : 'dashboard';
 }
 
-function handleRoute() {
+function renderCurrentView() {
   const tab = getActiveTabFromHash();
-  store.setActiveTab(tab);
-
+  store.state.activeTab = tab;
   const container = document.getElementById('app-content');
   if (container) {
-    container.innerHTML = '';
     const renderFn = routes[tab] || renderDashboardView;
     renderFn(container);
   }
+}
 
-  // Re-render navbars & modal to reflect active state & language
+function handleRoute() {
+  renderCurrentView();
   renderTopNavBar();
   renderSideNavBar();
   renderAuthModal();
-
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -54,6 +53,7 @@ export function initApp() {
     renderTopNavBar();
     renderSideNavBar();
     renderAuthModal();
+    renderCurrentView();
   });
 
   window.addEventListener('hashchange', handleRoute);

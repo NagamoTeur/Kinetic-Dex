@@ -192,9 +192,6 @@ class Store {
 
   // --- Caught Tracking ---
   toggleCaught(id) {
-    if (!this.state.currentUser) {
-      return false; // Action requires login
-    }
     const numericId = Number(id);
     this.state.caughtMap[numericId] = !this.state.caughtMap[numericId];
     if (!this.state.caughtMap[numericId]) {
@@ -202,7 +199,7 @@ class Store {
     }
     localStorage.setItem(STORAGE_KEYS.CAUGHT, JSON.stringify(this.state.caughtMap));
     
-    // Sync with active user
+    // Sync with active user if logged in
     this.syncCurrentUserStorage();
 
     this.notify();
@@ -248,9 +245,6 @@ class Store {
 
   // --- Checkpoints ---
   toggleCheckpoint(checkpointId) {
-    if (!this.state.currentUser) {
-      return false; // Action requires login
-    }
     this.state.checkpointsMap[checkpointId] = !this.state.checkpointsMap[checkpointId];
     localStorage.setItem(STORAGE_KEYS.CHECKPOINTS, JSON.stringify(this.state.checkpointsMap));
     this.syncCurrentUserStorage();
@@ -264,7 +258,6 @@ class Store {
 
   // --- Team Operations ---
   setTeam(team) {
-    if (!this.state.currentUser) return false;
     this.state.team = team.slice(0, 6);
     this.saveTeam();
     this.notify();
@@ -272,16 +265,27 @@ class Store {
   }
 
   addTeamMember(pokemon) {
-    if (!this.state.currentUser) return false;
+    if (!pokemon) return false;
     if (this.state.team.length >= 6) return false;
-    this.state.team.push(pokemon);
+    
+    // Ensure clean format
+    const formatted = {
+      id: pokemon.id,
+      name: pokemon.name,
+      nameFr: pokemon.nameFr || pokemon.name,
+      types: pokemon.types || ['normal'],
+      stats: pokemon.stats || { hp: 50, atk: 50, def: 50, spa: 50, spd: 50, spe: 50 },
+      artwork: pokemon.artwork || pokemon.sprites?.other?.['official-artwork']?.front_default
+    };
+
+    this.state.team.push(formatted);
     this.saveTeam();
     this.notify();
     return true;
   }
 
   removeTeamMember(index) {
-    if (!this.state.currentUser) return false;
+    if (index < 0 || index >= this.state.team.length) return false;
     this.state.team.splice(index, 1);
     this.saveTeam();
     this.notify();

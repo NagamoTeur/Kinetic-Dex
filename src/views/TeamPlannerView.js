@@ -253,12 +253,12 @@ export function renderTeamPlannerView(container) {
   // Attach game filter listener
   container.querySelector('#game-dex-filter')?.addEventListener('change', (e) => {
     selectedGameFilter = e.target.value;
+    renderTeamPlannerView(container);
   });
 
   // Attach clear team event
   container.querySelector('#clear-team-btn')?.addEventListener('click', () => {
     store.setTeam([]);
-    renderTeamPlannerView(container);
   });
 
   // Attach remove slot events
@@ -266,18 +266,13 @@ export function renderTeamPlannerView(container) {
     btn.addEventListener('click', () => {
       const idx = Number(btn.getAttribute('data-index'));
       store.removeTeamMember(idx);
-      renderTeamPlannerView(container);
     });
   });
 
   // Attach add slot modal picker events
   container.querySelectorAll('.add-slot-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      if (!store.state.currentUser) {
-        openAuthModal('login');
-      } else {
-        openPickerModal(lang);
-      }
+      openPickerModal(lang);
     });
   });
 }
@@ -290,6 +285,7 @@ async function openPickerModal(lang) {
 
   modal.classList.remove('hidden');
   modal.classList.add('flex');
+  searchInput.value = '';
 
   pickerList.innerHTML = `
     <div class="p-8 text-center text-gray-400 font-mono space-y-2">
@@ -368,12 +364,14 @@ async function openPickerModal(lang) {
       item.addEventListener('click', async () => {
         const id = item.getAttribute('data-id');
         const rawName = item.getAttribute('data-name');
-        const details = await fetchPokemonDetails(rawName || id);
-        const success = store.addTeamMember(details);
+        
         modal.classList.add('hidden');
         modal.classList.remove('flex');
+
+        const details = await fetchPokemonDetails(rawName || id);
+        const success = store.addTeamMember(details);
         if (!success) {
-          openAuthModal('login');
+          alert(lang === 'fr' ? 'Votre équipe est déjà complète (maximum 6 Pokémon) !' : 'Your team is already full (maximum 6 Pokémon)!');
         }
       });
     });

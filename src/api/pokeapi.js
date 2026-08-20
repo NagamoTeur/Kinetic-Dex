@@ -260,14 +260,15 @@ export async function fetchPokemonDetails(idOrName) {
     const data = await res.json();
 
     const numericId = data.id;
-    const frenchName = POKEMON_NAMES_FR[numericId] || (data.name.charAt(0).toUpperCase() + data.name.slice(1));
+    const rawName = data.name;
+    const frenchName = formatPokemonNameWithForm(rawName, numericId > 10000 ? null : numericId, 'fr');
 
     const formatted = {
       id: numericId,
-      name: data.name.charAt(0).toUpperCase() + data.name.slice(1),
+      name: rawName.charAt(0).toUpperCase() + rawName.slice(1),
       nameFr: frenchName,
       types: data.types.map(t => t.type.name),
-      artwork: data.sprites.other['official-artwork']?.front_default || getPokemonArtworkUrl(numericId),
+      artwork: data.sprites.other['official-artwork']?.front_default || data.sprites.front_default || getPokemonArtworkUrl(numericId),
       sprite: data.sprites.front_default || getPokemonSpriteUrl(numericId),
       height: data.height / 10,
       weight: data.weight / 10,

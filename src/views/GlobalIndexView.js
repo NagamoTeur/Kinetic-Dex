@@ -6,6 +6,7 @@ import { KANTO_POKEMON_DATA, getPokemonArtworkUrl, fetchPokemonDetails, fetchAll
 import { t } from '../i18n/translations.js';
 import { getPokemonName } from '../i18n/pokemonNames.js';
 import { openAuthModal } from '../components/AuthModal.js';
+import { renderPokeballSvg } from '../components/PokeballIcon.js';
 
 let searchQuery = '';
 let selectedGen = 'all';
@@ -108,14 +109,14 @@ export async function renderGlobalIndexView(container) {
           return `
             <div class="poke-card group bg-[#1c1b1b] p-4 rounded-xl border ${isCaught ? 'border-emerald-500/60 bg-emerald-950/20' : 'border-white/10 hover:border-[#ff5545]/50'} transition-all cursor-pointer flex flex-col justify-between" data-id="${p.id}" data-name="${p.rawName || p.name}">
               
-              <!-- Top Row: ID & Caught Checkbox -->
+              <!-- Top Row: ID & Caught Pokéball Button -->
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-1.5">
                   <span class="text-xs font-mono text-gray-400 font-bold">#${p.id.toString().padStart(3, '0')}</span>
                   ${isForm ? '<span class="text-[8px] font-mono px-1 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/30">FORM</span>' : ''}
                 </div>
-                <button class="caught-toggle-btn w-6 h-6 rounded flex items-center justify-center border transition-all ${isCaught ? 'bg-emerald-500 border-emerald-400 text-black' : 'border-gray-600 text-transparent hover:border-gray-400'}" data-id="${p.id}">
-                  <span class="material-symbols-outlined text-sm font-bold">check</span>
+                <button class="caught-toggle-btn p-1 rounded-full flex items-center justify-center transition-all cursor-pointer ${isCaught ? 'bg-red-950/40 border border-red-500/50' : 'hover:bg-white/5'}" data-id="${p.id}" title="${isCaught ? (lang === 'fr' ? 'Capturé !' : 'Caught!') : (lang === 'fr' ? 'Marquer comme capturé' : 'Mark as caught')}">
+                  ${renderPokeballSvg(isCaught, 22)}
                 </button>
               </div>
 
@@ -295,11 +296,11 @@ async function openPokemonModal(id, lang) {
   });
 
   document.getElementById('add-to-team-btn')?.addEventListener('click', () => {
-    const success = store.addTeamMember(pokemon);
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+    const success = store.addTeamMember(pokemon);
     if (!success) {
-      openAuthModal('login');
+      alert(lang === 'fr' ? 'Votre équipe est déjà complète (maximum 6 Pokémon) !' : 'Your team is already full (maximum 6 Pokémon)!');
     }
   });
 }
