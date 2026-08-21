@@ -6,6 +6,7 @@ import { renderTopNavBar } from './components/TopNavBar.js';
 import { renderSideNavBar } from './components/SideNavBar.js';
 import { renderAuthModal } from './components/AuthModal.js';
 import { animatePageEntrance } from './utils/anim.js';
+import { sanitizeAndCleanURL } from './utils/sanitize.js';
 
 import { renderDashboardView } from './views/DashboardView.js';
 import { renderGlobalIndexView } from './views/GlobalIndexView.js';
@@ -27,27 +28,10 @@ const routes = {
   '404': renderNotFoundView
 };
 
+const validRouteKeys = Object.keys(routes);
+
 function getActiveRoute() {
-  const hash = window.location.hash.replace('#', '').trim();
-  const rawPath = window.location.pathname.replace(/^\/|\/$/g, '').trim();
-
-  // 1. If explicit hash is present
-  if (hash !== '') {
-    return routes[hash] ? hash : '404';
-  }
-
-  // 2. Root path or index.html -> dashboard
-  if (rawPath === '' || rawPath === 'index.html') {
-    return 'dashboard';
-  }
-
-  // 3. Check if pathname matches a valid route (e.g. /global-index)
-  if (routes[rawPath]) {
-    return rawPath;
-  }
-
-  // 4. Any unrecognized URL path (e.g. /admin, /login-secret, /dashboard/test) -> 404!
-  return '404';
+  return sanitizeAndCleanURL(validRouteKeys);
 }
 
 function renderCurrentView() {

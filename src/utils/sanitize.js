@@ -90,3 +90,67 @@ export function sanitizeObjectStrings(input) {
   return input;
 }
 
+/**
+ * Inspects browser location for intrusion payloads (XSS, path traversal, injection parameters)
+ * and normalizes the address bar to a clean URL state.
+ * @param {Array<string>} validRoutes List of valid registered route keys
+ * @returns {string} Clean route identifier
+ */
+export function sanitizeAndCleanURL(validRoutes = []) {
+  try {
+    const hashRaw = window.location.hash.replace('#', '').trim();
+    const rawPath = window.location.pathname.replace(/^\/|\/$/g, '').trim();
+    const search = window.location.search;
+    const fullHref = window.location.href;
+
+    // Detect suspicious patterns (XSS script tags, JavaScript schemes, directory traversal, SQL/command injections)
+    const suspiciousPattern = /<script|javascript:|data:|vbscript:|\.\.\/|%3Cscript|%27|%22|eval\(|onload=|onerror=|SELECT%20|UNION%20/i;
+
+    let decodedHash = '';
+    let decodedPath = '';
+    try {
+      decodedHash = decodeURIComponent(hashRaw);
+      decodedPath = decodeURIComponent(rawPath);
+    } catch (e) {
+      // Malformed URI encoding indicates potential tampering
+      decodedHash = hashRaw;
+      decodedPath = rawPath;
+    }
+
+    const isSuspicious = suspiciousPattern.test(decodedHash) || 
+                         suspiciousPattern.test(decodedPath) || 
+                         suspiciousPattern.test(search) || 
+                         suspiciousPattern.test(fullHref);
+
+    let activeRoute = 'dashboard';
+
+    if (hashRaw !== '') {
+      const cleanHashKey = decodedHash.split('?')[0].split('&')[0].trim();
+      activeRoute = validRoutes.includes(cleanHashKey) ? cleanHashKey : '404';
+    } else if (rawPath === '' || rawPath === 'index.html') {
+      activeRoute = 'dashboard';
+    } else if (validRoutes.includes(rawPath)) {
+      activeRoute = rawPath;
+    } else {
+      activeRoute = '404';
+    }
+
+    // Rewrite browser URL to clean state if suspicious payload detected or invalid 404 route or unexpected query params
+    if (isSuspicious || activeRoute === '404' || search !== '') {
+      const targetHash = activeRoute === 'dashboard' ? '' : `#${activeRoute}`;
+      const targetURL = window.location.origin + window.location.pathname + targetHash;
+      
+      if (window.location.href !== targetURL) {
+        window.history.replaceState(null, '', targetURL);
+      }
+    }
+
+    return activeRoute;
+  } catch (err) {
+    console.warn('URL sanitization fallback activated', err);
+    window.history.replaceState(null, '', window.location.origin + '/#404');
+    return '404';
+  }
+}
+
+
