@@ -107,7 +107,16 @@ export const translations = {
     dataBackupTitle: "SAUVEGARDE ET SYNCHRONISATION DES DONNÉES",
     dataBackupDesc: "Exporte ou importe vos logs de capture, équipe et checkpoints au format JSON",
     exportJson: "EXPORTER FICHIER DE SAUVEGARDE JSON",
-    importJson: "IMPORTER FICHIER DE SAUVEGARDE"
+    importJson: "IMPORTER FICHIER DE SAUVEGARDE",
+
+    // 404 Page
+    notFoundTitle: "404 - ANOMALIE DE SIGNAL",
+    notFoundSubtitle: "UN MISSINGNO SAUVAGE EST APPARU !",
+    notFoundDesc: "Le routeur de navigation a perdu le signal. La page ou la route spécifiée est introuvable ou a été corrompue dans les herbes hautes.",
+    notFoundBackHome: "RETOUR AU TABLEAU DE BORD",
+    notFoundExploreDex: "EXPLORER INDEX POKÉDEX",
+    notFoundTeamPlanner: "ACCÉDER AU TEAM PLANNER",
+    notFoundSearchPrompt: "Rechercher un Pokémon (ex: Dracaufeu, #150, Pikachu)..."
   },
 
   en: {
@@ -214,7 +223,16 @@ export const translations = {
     dataBackupTitle: "DATA BACKUP & SYNCHRONIZATION",
     dataBackupDesc: "Export or import your complete marathon capture log, team state, and checkpoints",
     exportJson: "EXPORT BACKUP JSON",
-    importJson: "IMPORT BACKUP FILE"
+    importJson: "IMPORT BACKUP FILE",
+
+    // 404 Page
+    notFoundTitle: "404 - SIGNAL ANOMALY",
+    notFoundSubtitle: "A WILD MISSINGNO APPEARED!",
+    notFoundDesc: "Navigation router lost connection. The requested page or route could not be found or was corrupted in the tall grass.",
+    notFoundBackHome: "RETURN TO DASHBOARD",
+    notFoundExploreDex: "EXPLORE POKÉDEX INDEX",
+    notFoundTeamPlanner: "OPEN TEAM PLANNER",
+    notFoundSearchPrompt: "Search Pokémon (e.g. Charizard, #150, Pikachu)..."
   }
 };
 

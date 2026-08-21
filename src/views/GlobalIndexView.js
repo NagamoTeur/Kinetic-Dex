@@ -7,6 +7,7 @@ import { t } from '../i18n/translations.js';
 import { getPokemonName } from '../i18n/pokemonNames.js';
 import { openAuthModal } from '../components/AuthModal.js';
 import { renderPokeballSvg } from '../components/PokeballIcon.js';
+import { animatePokeballClick } from '../utils/anim.js';
 
 let searchQuery = '';
 let selectedGen = 'all';
@@ -181,6 +182,7 @@ export async function renderGlobalIndexView(container) {
   container.querySelectorAll('.caught-toggle-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
+      animatePokeballClick(btn);
       const id = btn.getAttribute('data-id');
       const success = store.toggleCaught(id);
       if (!success) {

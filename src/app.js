@@ -5,6 +5,7 @@ import { store } from './store/state.js';
 import { renderTopNavBar } from './components/TopNavBar.js';
 import { renderSideNavBar } from './components/SideNavBar.js';
 import { renderAuthModal } from './components/AuthModal.js';
+import { animatePageEntrance } from './utils/anim.js';
 
 import { renderDashboardView } from './views/DashboardView.js';
 import { renderGlobalIndexView } from './views/GlobalIndexView.js';
@@ -13,6 +14,7 @@ import { renderTeamPlannerView } from './views/TeamPlannerView.js';
 import { renderMarathonRoutingView } from './views/MarathonRoutingView.js';
 import { renderRouteGuideView } from './views/RouteGuideView.js';
 import { renderProfileView } from './views/ProfileView.js';
+import { renderNotFoundView } from './views/NotFoundView.js';
 
 const routes = {
   'dashboard': renderDashboardView,
@@ -21,12 +23,14 @@ const routes = {
   'team-planner': renderTeamPlannerView,
   'marathon-routing': renderMarathonRoutingView,
   'route-guide': renderRouteGuideView,
-  'profile': renderProfileView
+  'profile': renderProfileView,
+  '404': renderNotFoundView
 };
 
 function getActiveTabFromHash() {
   const hash = window.location.hash.replace('#', '');
-  return routes[hash] ? hash : 'dashboard';
+  if (!hash || hash === '') return 'dashboard';
+  return routes[hash] ? hash : '404';
 }
 
 function renderCurrentView() {
@@ -34,8 +38,9 @@ function renderCurrentView() {
   store.state.activeTab = tab;
   const container = document.getElementById('app-content');
   if (container) {
-    const renderFn = routes[tab] || renderDashboardView;
+    const renderFn = routes[tab] || renderNotFoundView;
     renderFn(container);
+    animatePageEntrance(container);
   }
 }
 
@@ -45,6 +50,27 @@ function handleRoute() {
   renderSideNavBar();
   renderAuthModal();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Global Keyboard Shortcuts (Ctrl+K -> Search, Esc -> Close Modals)
+function setupGlobalKeybindings() {
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      store.setActiveTab('global-index');
+      window.location.hash = '#global-index';
+      setTimeout(() => {
+        const input = document.getElementById('global-search-input');
+        if (input) input.focus();
+      }, 120);
+    } else if (e.key === 'Escape') {
+      const modals = document.querySelectorAll('#poke-detail-modal, #auth-modal');
+      modals.forEach(m => {
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+      });
+    }
+  });
 }
 
 // Global App Initialization
@@ -57,6 +83,7 @@ export function initApp() {
   });
 
   window.addEventListener('hashchange', handleRoute);
+  setupGlobalKeybindings();
 
   handleRoute();
 }

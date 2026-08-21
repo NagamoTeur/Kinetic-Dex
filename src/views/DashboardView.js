@@ -5,6 +5,7 @@ import { store } from '../store/state.js';
 import { getPokemonArtworkUrl } from '../api/pokeapi.js';
 import { t } from '../i18n/translations.js';
 import { getPokemonName } from '../i18n/pokemonNames.js';
+import { animateNumberCounter } from '../utils/anim.js';
 
 export function renderDashboardView(container) {
   const state = store.state;
@@ -60,8 +61,8 @@ export function renderDashboardView(container) {
           <!-- Overall Completion Radial / Gauge Box -->
           <div class="bg-[#131313]/80 p-6 rounded-xl border border-white/15 min-w-[240px] text-center space-y-3 backdrop-blur-md">
             <div class="text-xs font-mono text-gray-400 uppercase tracking-widest">${t('globalCompletion', lang)}</div>
-            <div class="text-4xl font-sora font-black text-[#00f2ff] tracking-tight glow-cyan">
-              ${globalStats.percentage}%
+            <div id="dash-global-stat" class="text-4xl font-sora font-black text-[#00f2ff] tracking-tight glow-cyan">
+              0%
             </div>
             <div class="w-full bg-gray-800 rounded-full h-3 overflow-hidden border border-white/10 p-0.5">
               <div class="bg-gradient-to-r from-[#ff1c1c] via-[#e9c400] to-[#00f2ff] h-full rounded-full transition-all duration-500" style="width: ${globalStats.percentage}%"></div>
@@ -244,4 +245,8 @@ export function renderDashboardView(container) {
 
     </div>
   `;
+
+  setTimeout(() => {
+    animateNumberCounter('#dash-global-stat', globalStats.percentage);
+  }, 50);
 }
