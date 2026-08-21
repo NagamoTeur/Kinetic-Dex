@@ -6,6 +6,7 @@ import { calculateTeamWeaknesses, getPokemonArtworkUrl, KANTO_POKEMON_DATA, fetc
 import { t } from '../i18n/translations.js';
 import { getPokemonName } from '../i18n/pokemonNames.js';
 import { openAuthModal } from '../components/AuthModal.js';
+import { debounce, escapeHTML } from '../utils/sanitize.js';
 
 let selectedGameFilter = 'free'; // 'free' | 'forms' | 'gen1' | 'gen2' | 'gen3' | 'gen4' | 'gen5' | 'gen6' | 'gen7' | 'gen8' | 'gen9'
 
@@ -379,8 +380,9 @@ async function openPickerModal(lang) {
 
   renderList();
 
+  const debouncedRenderList = debounce((val) => renderList(val), 150);
   searchInput.oninput = (e) => {
-    renderList(e.target.value);
+    debouncedRenderList(e.target.value);
   };
 
   document.getElementById('close-picker-btn').onclick = () => {

@@ -134,9 +134,21 @@ export function renderAuthModal() {
 
   authForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const username = document.getElementById('auth-username').value;
+    const username = document.getElementById('auth-username').value.trim();
     const password = document.getElementById('auth-password').value;
     const errorMsg = document.getElementById('auth-error-msg');
+
+    if (!username || username.length < 3) {
+      errorMsg.textContent = lang === 'fr' ? 'Le nom de runner doit faire au moins 3 caractères' : 'Runner username must be at least 3 characters';
+      errorMsg.classList.remove('hidden');
+      return;
+    }
+
+    if (!password || password.length < 4) {
+      errorMsg.textContent = lang === 'fr' ? 'Le mot de passe doit faire au moins 4 caractères' : 'Password must be at least 4 characters';
+      errorMsg.classList.remove('hidden');
+      return;
+    }
 
     if (activeAuthMode === 'login') {
       const res = await store.login(username, password);
@@ -148,8 +160,15 @@ export function renderAuthModal() {
         errorMsg.classList.remove('hidden');
       }
     } else {
-      const email = document.getElementById('auth-email').value;
-      const title = document.getElementById('auth-title').value || 'Marathon Runner';
+      const email = document.getElementById('auth-email').value.trim();
+      const title = document.getElementById('auth-title').value.trim() || 'Marathon Runner';
+
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errorMsg.textContent = lang === 'fr' ? 'Veuillez saisir une adresse email valide' : 'Please enter a valid email address';
+        errorMsg.classList.remove('hidden');
+        return;
+      }
+
       const res = await store.register(username, email, password, title);
       if (res.success) {
         modal?.classList.add('hidden');

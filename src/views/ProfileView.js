@@ -5,7 +5,7 @@ import { store } from '../store/state.js';
 import { getPokemonArtworkUrl } from '../api/pokeapi.js';
 import { t } from '../i18n/translations.js';
 import { openAuthModal } from '../components/AuthModal.js';
-import { escapeHTML } from '../utils/sanitize.js';
+import { escapeHTML, sanitizeObjectStrings } from '../utils/sanitize.js';
 
 function validateBackupData(imported) {
   if (!imported || typeof imported !== 'object') return false;
@@ -227,11 +227,13 @@ export function renderProfileView(container) {
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
-        const imported = JSON.parse(event.target.result);
-        if (!validateBackupData(imported)) {
+        const rawImported = JSON.parse(event.target.result);
+        if (!validateBackupData(rawImported)) {
           alert(lang === 'fr' ? 'Fichier de sauvegarde invalide ou corrompu !' : 'Invalid or corrupted backup JSON file!');
           return;
         }
+
+        const imported = sanitizeObjectStrings(rawImported);
 
         if (imported.caughtMap) store.state.caughtMap = imported.caughtMap;
         if (imported.checkpointsMap) store.state.checkpointsMap = imported.checkpointsMap;

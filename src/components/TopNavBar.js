@@ -4,6 +4,7 @@
 import { store } from '../store/state.js';
 import { t } from '../i18n/translations.js';
 import { openAuthModal } from './AuthModal.js';
+import { escapeHTML } from '../utils/sanitize.js';
 
 export function renderTopNavBar() {
   const container = document.getElementById('top-navbar');
@@ -22,6 +23,9 @@ export function renderTopNavBar() {
   };
 
   const activeBadge = modeBadges[state.activeMode] || modeBadges.speedrun;
+  const safeSessionName = profile ? escapeHTML(profile.sessionName) : (lang === 'fr' ? 'Invite Déconnecté' : 'Guest Offline');
+  const safeName = profile ? escapeHTML(profile.name) : '';
+  const safeTitle = profile ? escapeHTML(profile.title) : '';
 
   container.innerHTML = `
     <div class="flex items-center justify-between px-6 py-3 bg-[#131313] border-b border-white/10 text-white select-none">
@@ -39,7 +43,7 @@ export function renderTopNavBar() {
               <h1 class="font-sora font-extrabold text-lg tracking-wider text-white">${t('brandTitle', lang)}<span class="text-[#ff5545]">${t('brandSubtitle', lang)}</span></h1>
               <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-cyan-400 border border-cyan-500/30">v4.0</span>
             </div>
-            <p class="text-xs text-gray-400 font-mono">${t('sessionLabel', lang)} <span class="text-white">${profile ? profile.sessionName : (lang === 'fr' ? 'Invite Déconnecté' : 'Guest Offline')}</span></p>
+            <p class="text-xs text-gray-400 font-mono">${t('sessionLabel', lang)} <span class="text-white">${safeSessionName}</span></p>
           </div>
         </a>
 
@@ -102,8 +106,8 @@ export function renderTopNavBar() {
                 <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#131313]"></span>
               </div>
               <div class="hidden xl:block text-left">
-                <div class="text-xs font-sora font-bold text-white leading-none">${profile.name}</div>
-                <div class="text-[10px] font-mono text-cyan-400 leading-tight">${profile.title}</div>
+                <div class="text-xs font-sora font-bold text-white leading-none">${safeName}</div>
+                <div class="text-[10px] font-mono text-cyan-400 leading-tight">${safeTitle}</div>
               </div>
             </a>
 

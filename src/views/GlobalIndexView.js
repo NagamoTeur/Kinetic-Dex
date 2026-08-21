@@ -8,6 +8,7 @@ import { getPokemonName } from '../i18n/pokemonNames.js';
 import { openAuthModal } from '../components/AuthModal.js';
 import { renderPokeballSvg } from '../components/PokeballIcon.js';
 import { animatePokeballClick } from '../utils/anim.js';
+import { debounce, escapeHTML } from '../utils/sanitize.js';
 
 let searchQuery = '';
 let selectedGen = 'all';
@@ -77,7 +78,7 @@ export async function renderGlobalIndexView(container) {
         <!-- Search Input -->
         <div class="relative min-w-[320px]">
           <span class="material-symbols-outlined absolute left-3.5 top-3 text-gray-400">search</span>
-          <input type="text" id="global-search-input" value="${searchQuery}" placeholder="${t('searchPlaceholder', lang)}"
+          <input type="text" id="global-search-input" value="${escapeHTML(searchQuery)}" placeholder="${t('searchPlaceholder', lang)}"
                  class="w-full bg-[#131313] border border-white/10 focus:border-[#00f2ff] rounded-xl pl-10 pr-4 py-2.5 text-sm font-mono text-white placeholder-gray-500 outline-none transition-colors" />
         </div>
       </div>
@@ -159,9 +160,21 @@ export async function renderGlobalIndexView(container) {
   // Attach Listeners
   const searchInput = container.querySelector('#global-search-input');
   if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
-      searchQuery = e.target.value;
+    const handleSearch = debounce((val) => {
+      searchQuery = val;
       renderGlobalIndexView(container);
+      setTimeout(() => {
+        const input = document.getElementById('global-search-input');
+        if (input) {
+          input.focus();
+          const len = input.value.length;
+          input.setSelectionRange(len, len);
+        }
+      }, 30);
+    }, 180);
+
+    searchInput.addEventListener('input', (e) => {
+      handleSearch(e.target.value);
     });
   }
 

@@ -6,6 +6,7 @@ import { getPokemonArtworkUrl } from '../api/pokeapi.js';
 import { t } from '../i18n/translations.js';
 import { getPokemonName } from '../i18n/pokemonNames.js';
 import { animateNumberCounter } from '../utils/anim.js';
+import { escapeHTML } from '../utils/sanitize.js';
 
 export function renderDashboardView(container) {
   const state = store.state;
@@ -103,7 +104,7 @@ export function renderDashboardView(container) {
             <span class="text-xs font-mono text-emerald-400 font-bold">READY</span>
           </div>
           <div class="text-xs font-mono text-gray-400 truncate">
-            Active Roster: ${state.team.map(t => getPokemonName(t, lang)).join(', ') || 'None'}
+            Active Roster: ${state.team.map(t => escapeHTML(getPokemonName(t, lang))).join(', ') || 'None'}
           </div>
         </div>
 
@@ -114,7 +115,7 @@ export function renderDashboardView(container) {
             <span class="material-symbols-outlined text-[#e9c400]">speed</span>
           </div>
           <div class="flex items-baseline justify-between">
-            <span class="text-xl font-sora font-bold text-white uppercase">${state.activeMode}</span>
+            <span class="text-xl font-sora font-bold text-white uppercase">${escapeHTML(state.activeMode)}</span>
             <span class="text-xs font-mono text-amber-400">ACTIVE</span>
           </div>
           <div class="text-xs font-mono text-gray-400">
@@ -158,7 +159,7 @@ export function renderDashboardView(container) {
           <!-- Team 6 Card Grid -->
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
             ${state.team && state.team.length > 0 ? state.team.map((member, i) => {
-              const displayName = getPokemonName(member, lang);
+              const displayName = escapeHTML(getPokemonName(member, lang));
               return `
                 <div class="bg-[#2a2a2a] p-4 rounded-xl border border-white/10 hover:border-[#00f2ff]/50 transition-all flex flex-col items-center text-center space-y-2 group relative">
                   <span class="absolute top-2 left-2 text-[10px] font-mono text-gray-500">SLOT ${i + 1}</span>
