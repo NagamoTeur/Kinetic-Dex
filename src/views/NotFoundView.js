@@ -8,7 +8,7 @@ import { animate404Glitch, animatePageEntrance } from '../utils/anim.js';
 export function renderNotFoundView(container) {
   const state = store.state;
   const lang = state.lang;
-  const currentHash = window.location.hash || '#unknown';
+  const currentUri = (window.location.pathname + window.location.hash) || '/404';
 
   container.innerHTML = `
     <div class="min-h-[calc(100vh-120px)] flex flex-col items-center justify-center p-6 text-center select-none space-y-8 relative overflow-hidden">
@@ -86,9 +86,9 @@ export function renderNotFoundView(container) {
         <div class="mx-auto max-w-md bg-[#0e0e0e] p-3 rounded-lg border border-white/10 text-left font-mono text-[11px] space-y-1 text-gray-400 select-text">
           <div class="flex items-center justify-between text-gray-500 text-[10px] pb-1 border-b border-white/5">
             <span>TERMINAL_DIAGNOSTIC</span>
-            <span class="text-red-400">ERR_HASH_404</span>
+            <span class="text-red-400">ERR_URI_404</span>
           </div>
-          <div><span class="text-cyan-400">URI:</span> <span class="text-white">${currentHash}</span></div>
+          <div><span class="text-cyan-400">URI:</span> <span class="text-white">${currentUri}</span></div>
           <div><span class="text-cyan-400">STATUS:</span> <span class="text-red-400">UNRESOLVED_ROUTE</span></div>
           <div><span class="text-cyan-400">SUGGESTION:</span> <span class="text-emerald-400">Redirecting to valid checkpoint...</span></div>
         </div>
