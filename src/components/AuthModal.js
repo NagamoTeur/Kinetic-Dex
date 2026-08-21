@@ -3,6 +3,7 @@
  */
 import { store } from '../store/state.js';
 import { t } from '../i18n/translations.js';
+import { escapeHTML } from '../utils/sanitize.js';
 
 let activeAuthMode = 'login'; // 'login' | 'register'
 let customPromptMsg = null;
@@ -38,7 +39,7 @@ export function renderAuthModal() {
               : (lang === 'fr' ? 'CRÉER UN COMPTE' : 'CREATE RUNNER ACCOUNT')}
           </h3>
           <p class="text-xs font-mono text-gray-400">
-            ${customPromptMsg ? customPromptMsg : (activeAuthMode === 'login'
+            ${customPromptMsg ? escapeHTML(customPromptMsg) : (activeAuthMode === 'login'
               ? (lang === 'fr' ? 'Connectez-vous pour synchroniser votre marathon' : 'Sign in to access your marathon progress')
               : (lang === 'fr' ? 'Rejoignez la plateforme de commandement Kinetic Dex' : 'Join the Kinetic Dex command platform'))}
           </p>
@@ -109,7 +110,6 @@ export function renderAuthModal() {
 
   // Attach event handlers
   const modal = document.getElementById('auth-modal');
-  const modalBox = document.getElementById('auth-modal-card');
   const closeBtn = document.getElementById('close-auth-modal');
   const toggleBtn = document.getElementById('toggle-auth-mode-btn');
   const authForm = document.getElementById('auth-form');
@@ -132,14 +132,14 @@ export function renderAuthModal() {
     openAuthModal(activeAuthMode);
   });
 
-  authForm?.addEventListener('submit', (e) => {
+  authForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const username = document.getElementById('auth-username').value;
     const password = document.getElementById('auth-password').value;
     const errorMsg = document.getElementById('auth-error-msg');
 
     if (activeAuthMode === 'login') {
-      const res = store.login(username, password);
+      const res = await store.login(username, password);
       if (res.success) {
         modal?.classList.add('hidden');
         customPromptMsg = null;
@@ -150,7 +150,7 @@ export function renderAuthModal() {
     } else {
       const email = document.getElementById('auth-email').value;
       const title = document.getElementById('auth-title').value || 'Marathon Runner';
-      const res = store.register(username, email, password, title);
+      const res = await store.register(username, email, password, title);
       if (res.success) {
         modal?.classList.add('hidden');
         customPromptMsg = null;

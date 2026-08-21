@@ -1,5 +1,5 @@
-# Kinetic Dex - Production Dockerfile (NGINX Alpine)
-FROM nginx:alpine
+# Kinetic Dex - Production Dockerfile (NGINX 1.27 Alpine Pinned Image)
+FROM nginx:1.27-alpine
 
 # Remove default nginx static assets
 RUN rm -rf /usr/share/nginx/html/*

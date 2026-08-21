@@ -1,6 +1,4 @@
-/**
- * Kinetic Dex - Central Reactive State Store with Auth Management
- */
+import { hashPassword } from '../utils/sanitize.js';
 
 const STORAGE_KEYS = {
   CAUGHT: 'kinetic_dex_caught',
@@ -75,10 +73,12 @@ class Store {
   }
 
   // --- Auth Operations ---
-  register(username, email, password, title = 'Marathon Challenger') {
+  async register(username, email, password, title = 'Marathon Challenger') {
     if (this.state.users[username]) {
       return { success: false, messageFR: 'Ce nom de runner existe déjà !', messageEN: 'Runner username already exists!' };
     }
+
+    const hashedPassword = await hashPassword(password, username);
 
     const defaultTeam = [
       { id: 6, name: 'Charizard', nameFr: 'Dracaufeu', types: ['fire', 'flying'], stats: { hp: 78, atk: 84, def: 78, spa: 109, spd: 85, spe: 100 } },
@@ -89,7 +89,7 @@ class Store {
     const newUser = {
       username,
       email,
-      password,
+      password: hashedPassword,
       profile: {
         name: username,
         email,
@@ -109,9 +109,26 @@ class Store {
     return this.login(username, password);
   }
 
-  login(username, password) {
+  async login(username, password) {
     const user = this.state.users[username];
-    if (user && user.password === password) {
+    if (!user) {
+      return { success: false, messageFR: 'Identifiants incorrects', messageEN: 'Invalid username or password' };
+    }
+
+    const hashedPassword = await hashPassword(password, username);
+    let isAuthenticated = false;
+
+    // Check hashed password match
+    if (user.password === hashedPassword) {
+      isAuthenticated = true;
+    } else if (user.password === password) {
+      // Automatic migration from legacy plain-text password to hashed password
+      user.password = hashedPassword;
+      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(this.state.users));
+      isAuthenticated = true;
+    }
+
+    if (isAuthenticated) {
       this.state.currentUser = username;
       localStorage.setItem(STORAGE_KEYS.CURRENT_USER, username);
 
@@ -155,23 +172,31 @@ class Store {
     return true;
   }
 
-  changePassword(oldPassword, newPassword) {
+  async changePassword(oldPassword, newPassword) {
     if (!this.state.currentUser) return { success: false, messageFR: 'Non connecté', messageEN: 'Not logged in' };
     const user = this.state.users[this.state.currentUser];
-    if (!user || user.password !== oldPassword) {
+    if (!user) return { success: false, messageFR: 'Utilisateur introuvable', messageEN: 'User not found' };
+
+    const oldHash = await hashPassword(oldPassword, this.state.currentUser);
+    if (user.password !== oldHash && user.password !== oldPassword) {
       return { success: false, messageFR: 'Ancien mot de passe incorrect', messageEN: 'Incorrect current password' };
     }
-    user.password = newPassword;
+
+    user.password = await hashPassword(newPassword, this.state.currentUser);
     localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(this.state.users));
     return { success: true, messageFR: 'Mot de passe mis à jour !', messageEN: 'Password updated successfully!' };
   }
 
-  deleteAccount(password) {
+  async deleteAccount(password) {
     if (!this.state.currentUser) return { success: false, messageFR: 'Non connecté', messageEN: 'Not logged in' };
     const user = this.state.users[this.state.currentUser];
-    if (!user || user.password !== password) {
+    if (!user) return { success: false, messageFR: 'Utilisateur introuvable', messageEN: 'User not found' };
+
+    const passHash = await hashPassword(password, this.state.currentUser);
+    if (user.password !== passHash && user.password !== password) {
       return { success: false, messageFR: 'Mot de passe incorrect', messageEN: 'Incorrect password' };
     }
+
     delete this.state.users[this.state.currentUser];
     localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(this.state.users));
     this.logout();

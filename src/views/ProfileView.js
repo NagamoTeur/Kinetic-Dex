@@ -5,6 +5,18 @@ import { store } from '../store/state.js';
 import { getPokemonArtworkUrl } from '../api/pokeapi.js';
 import { t } from '../i18n/translations.js';
 import { openAuthModal } from '../components/AuthModal.js';
+import { escapeHTML } from '../utils/sanitize.js';
+
+function validateBackupData(imported) {
+  if (!imported || typeof imported !== 'object') return false;
+  
+  if (imported.caughtMap && (typeof imported.caughtMap !== 'object' || Array.isArray(imported.caughtMap))) return false;
+  if (imported.checkpointsMap && (typeof imported.checkpointsMap !== 'object' || Array.isArray(imported.checkpointsMap))) return false;
+  if (imported.team && !Array.isArray(imported.team)) return false;
+  if (imported.profile && (typeof imported.profile !== 'object' || Array.isArray(imported.profile))) return false;
+
+  return true;
+}
 
 export function renderProfileView(container) {
   const state = store.state;
@@ -49,6 +61,11 @@ export function renderProfileView(container) {
     return;
   }
 
+  const safeName = escapeHTML(profile.name);
+  const safeRank = escapeHTML(profile.rank || 'A-Class');
+  const safeTitle = escapeHTML(profile.title || 'Marathon Challenger');
+  const safeSessionName = escapeHTML(profile.sessionName || 'Active Session');
+
   container.innerHTML = `
     <div class="p-8 space-y-8 animate-fadeIn select-none">
       
@@ -66,13 +83,13 @@ export function renderProfileView(container) {
 
             <div class="space-y-1">
               <div class="flex items-center gap-3">
-                <h2 class="text-2xl font-sora font-extrabold text-white">${profile.name}</h2>
+                <h2 class="text-2xl font-sora font-extrabold text-white">${safeName}</h2>
                 <span class="px-2.5 py-0.5 rounded bg-[#ff1c1c]/20 text-[#ff1c1c] border border-[#ff1c1c]/40 font-mono font-bold text-xs">
-                  ${profile.rank || 'A-Class'}
+                  ${safeRank}
                 </span>
               </div>
-              <p class="text-xs font-mono text-cyan-400">${profile.title || 'Marathon Challenger'}</p>
-              <p class="text-xs font-mono text-gray-400">${t('sessionLabel', lang)} ${profile.sessionName || 'Active Session'}</p>
+              <p class="text-xs font-mono text-cyan-400">${safeTitle}</p>
+              <p class="text-xs font-mono text-gray-400">${t('sessionLabel', lang)} ${safeSessionName}</p>
             </div>
           </div>
 
@@ -211,6 +228,11 @@ export function renderProfileView(container) {
     reader.onload = (event) => {
       try {
         const imported = JSON.parse(event.target.result);
+        if (!validateBackupData(imported)) {
+          alert(lang === 'fr' ? 'Fichier de sauvegarde invalide ou corrompu !' : 'Invalid or corrupted backup JSON file!');
+          return;
+        }
+
         if (imported.caughtMap) store.state.caughtMap = imported.caughtMap;
         if (imported.checkpointsMap) store.state.checkpointsMap = imported.checkpointsMap;
         if (imported.team) store.state.team = imported.team;
